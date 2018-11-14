@@ -6,4 +6,5 @@ package uppgift4_oop;
  */
 public class ServerSideGame {
     
+    ServerSidePlayer currentPlayer; 
 }

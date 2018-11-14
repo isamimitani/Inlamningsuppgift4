@@ -16,16 +16,20 @@ public class QuizServer {
     
     public QuizServer(){
               
+        System.out.println("QUIZServer is Running");
+        
         try{
             serverSocket = new ServerSocket(portNumber);
             
             while(true){
-                ServerSidePlayer player1 = new ServerSidePlayer(serverSocket.accept());
-                ServerSidePlayer player2 = new ServerSidePlayer(serverSocket.accept());
-                //player1.setOpponent(player2);
-                //player2.setOpponent(player1);
-                //player1.start();
-                //player2.start();
+                ServerSideGame game = new ServerSideGame();
+                ServerSidePlayer player1 = new ServerSidePlayer(serverSocket.accept(), game);
+                ServerSidePlayer player2 = new ServerSidePlayer(serverSocket.accept(), game);
+                player1.setOpponent(player2);
+                player2.setOpponent(player1);
+                game.currentPlayer = player1;
+                player1.start();
+                player2.start();
                 
             }
               
@@ -33,6 +37,7 @@ public class QuizServer {
             Logger.getLogger(QuizServer.class.getName()).log(Level.SEVERE, null, ioe);
         } finally {
             try {
+                System.out.println("QUIZServer is shutting down");
                 serverSocket.close();
             } catch (IOException ex) {
                 Logger.getLogger(QuizServer.class.getName()).log(Level.SEVERE, null, ex);
