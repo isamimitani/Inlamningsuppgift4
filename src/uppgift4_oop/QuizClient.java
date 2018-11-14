@@ -16,6 +16,8 @@ public class QuizClient {
     int portNumber = 12540;
     
     public QuizClient(){
+        
+        
         try(
             Socket socket = new Socket(hostName, portNumber);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
