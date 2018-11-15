@@ -1,11 +1,9 @@
 package uppgift4_oop;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,30 +11,37 @@ import java.net.Socket;
  */
 public class QuizServer {
     
-    int portNumber = 12540;
+    private int portNumber = 12540;
+    private ServerSocket serverSocket;
     
     public QuizServer(){
-        try(
-            ServerSocket serverSocket = new ServerSocket(portNumber);
-            Socket clientSocket = serverSocket.accept();
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        ){
-            String inputline;
-            String outputline;
+              
+        System.out.println("QUIZServer is Running");
+        
+        try{
+            serverSocket = new ServerSocket(portNumber);
             
-            System.out.println(clientSocket.getInetAddress().getHostAddress());
-            System.out.println(clientSocket.getInetAddress().getCanonicalHostName());
-            System.out.println(clientSocket.getPort());
-            
-            out.println("Write your text to repeat: ");
-            
-            while((inputline = in.readLine()) != null){
-                out.println(inputline);
+            while(true){
+                ServerSideGame game = new ServerSideGame();
+                ServerSidePlayer player1 = new ServerSidePlayer(serverSocket.accept(), game);
+                ServerSidePlayer player2 = new ServerSidePlayer(serverSocket.accept(), game);
+                player1.setOpponent(player2);
+                player2.setOpponent(player1);
+                game.currentPlayer = player1;
+                player1.start();
+                player2.start();
+                
             }
               
         } catch(IOException ioe){
-            System.exit(0);
+            Logger.getLogger(QuizServer.class.getName()).log(Level.SEVERE, null, ioe);
+        } finally {
+            try {
+                System.out.println("QUIZServer is shutting down");
+                serverSocket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(QuizServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }

@@ -17,6 +17,7 @@ public class ServerSideGame {
     private String [] alternatives;
     private int answer;
     private int score;
+    ServerSidePlayer currentPlayer;
     
     public ServerSideGame(String question, String []alternatives, int answer, int score){
         this.question = question;
