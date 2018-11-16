@@ -3,6 +3,14 @@ package uppgift4_oop;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  *
@@ -10,9 +18,14 @@ import java.util.Random;
  */
 public class ServerSideGame {
     
+
     private ServerSidePlayer currentPlayer; 
     private ArrayList<String> categories = new ArrayList<>();
     private ArrayList<Quiz> questions = new ArrayList<>();
+    
+    public ServerSideGame(){
+
+    }
     
 //    public void createCategories(){
 //        for(int i=0; i<questions.size(); i++){
@@ -50,4 +63,8 @@ public class ServerSideGame {
     public void setCurrentPlayer(ServerSidePlayer player){
         currentPlayer = player;
     }
+    
+    public String toString(){
+        return "Question";
+    }   
 }
