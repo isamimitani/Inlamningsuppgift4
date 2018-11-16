@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,25 +22,16 @@ public class QuizClient {
     public QuizClient(){
         
         
-        try(
-            
-            Scanner sc = new Scanner(System.in);
-        ){
+        try{
             socket = new Socket(serverAddress, portNumber);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream()); 
             
             Object fromServer;
-            String fromUser;
             
             while((fromServer = in.readObject()) != null){
-                System.out.println("From Server: " + fromServer);
-                
-                fromUser = sc.nextLine();
-                if(fromUser != null || fromUser.equals("")){
-                    out.writeObject(fromUser.trim());
-                }
-                        
+                System.out.println(fromServer);
+                //out.writeObject("ANSWER");
             }
          
         } catch(IOException ex){
