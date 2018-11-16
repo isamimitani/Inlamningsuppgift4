@@ -50,37 +50,37 @@ public class ServerSideGame {
     }
     
 }
-class Questions{
-    private ArrayList<ServerSideGame> questions = new ArrayList<>();
-    
-    public Questions() throws FileNotFoundException{
-        try{
-            FileReader file = new FileReader("questions.txt");
-            BufferedReader reader = new BufferedReader(file);
-            Scanner scan = new Scanner(reader);
-            Scanner keyBoardInput = new Scanner(System.in);
-            
-            String line;
-            String question = "";
-            String [] alternatives = null;
-            
-            
-            int answer = 0;
-            
-            int numberOfAlternatives = 0;
-            int counter = 0;
-            int score = 0;
-            
-//            for (int i= 0; i<questions.size(); i++)
-//            {
-//                System.out.println(questions.size());
-//                String answer = keyBoardInput.nextLine();
-//                //compareing answers to actual answer to question
-//                if(answer.equals(questions.)){
-//                    score++;
-//                }
-                
-            }
+//class Questions{
+//    private ArrayList<ServerSideGame> questions = new ArrayList<>();
+//    
+//    public Questions() throws FileNotFoundException{
+//        try{
+//            FileReader file = new FileReader("questions.txt");
+//            BufferedReader reader = new BufferedReader(file);
+//            Scanner scan = new Scanner(reader);
+//            Scanner keyBoardInput = new Scanner(System.in);
+//            
+//            String line;
+//            String question = "";
+//            String [] alternatives = null;
+//            
+//            
+//            int answer = 0;
+//            
+//            int numberOfAlternatives = 0;
+//            int counter = 0;
+//            int score = 0;
+//            
+////            for (int i= 0; i<questions.size(); i++)
+////            {
+////                System.out.println(questions.size());
+////                String answer = keyBoardInput.nextLine();
+////                //compareing answers to actual answer to question
+////                if(answer.equals(questions.)){
+////                    score++;
+////                }
+//                
+//            }
 //            
 //            do{ 
 //                
@@ -109,7 +109,7 @@ class Questions{
 //        }
 //        catch (IOException e){
 //            e.printStackTrace();
-        }
-        
-    }
-}
+//        }
+//        
+//    }
+//}
