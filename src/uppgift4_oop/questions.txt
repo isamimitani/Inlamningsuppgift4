@@ -1,1 +1,16 @@
-
+World, Vilken är Frankrikes huvudstad?, Paris, a:Berlin, B:Paris, C:Prag, D:Madrid
+World, Vad heter Italiens president?, Sergio Mattarella, a:Matteo Salvini, b:Giuseppe Conte, c:Sergio Mattarella, d:Sebastián Piñera
+World, Vad har Kina för valuta?, Renminbi, a:bolívar, b:Yen, c:Rupiah, d:Renminbi
+World, Vart ligger staden Córdoba?, Argentina, a:Argentina, b:Norge, c:Italien, d:Irak
+Sport, Första fotbolls VM ägde rum i? Uruguay, a:Brasilien b:Uruguay, c:Tyskland, D:Frankrike
+Sport, Vilken fotbollsspelare har spelat allra flest landskamper i Sverige?, Anders Svensson, a:Zlatan Ibrahimovic, b:Henrik Larson, c:Jimmy Durmaz, d:Anders Svensson
+Sport, Vilken idrott i Sverige har nästflest utövare i Sverige efter fotboll?, Innebandy, a:Innebandy, b:Ishockey c:Handboll, d:Basketboll
+Sport, Inom vilken sport har Jörgen Persson tagit fem VM-guld? Bordtennis, a:Simning, b:Bordtennis, c:Klättring d:Löpning
+Musik, I vilket land avgjordes 2012-års Eurovision Song Contest Final?,Azerbajdzjan, a:Azerbajdzjan, b:Sverige, c:Ukraina, d:Grekland
+Musik, Vilken engelsk sångare har toppat hitlistorna med låten "Congratulations"?,Cliff Richard, a:Paul Young, b:Boy George, C:Cliff Richard , d:Joe Cocker
+Musik, Vilket år släpptes Michael Jacksons första soloalbum?, 1972, a:1940, b:1972, c:1998, d:2002
+Musik, Hur gammal blev Elvis Presley? 42, a:42, b:32, c:56, d:49
+Histora, Vad användes de egyptiska pyramiderna till?, Gravplatser, a:Förådskammare, b:Offerplatser c:Utkikstorn, d:Gravplatser
+Histora, Vem är känd för att ha uttalat: "I Have a Dream"?, Martin Luther King,  a:Winston Churchill, b:John F. Kennedy, c:John Lennon, d:Martin Luther King
+Histora, Vilket land associerar man främst med namnet Djingis Khan?, Mongoliet a:Kina, b,Mongolie, c:tVietnam, d:Iran
+Histora, lket afrikanskt land hette tidigare Sydrhodesia? Zimbabwe a:Kenya, b:Zimbabwe c:Tunis, d:Egypy

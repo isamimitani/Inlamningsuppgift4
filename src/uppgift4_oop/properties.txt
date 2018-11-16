@@ -1,6 +1,0 @@
-fontName=SansSerif
-fontStyle=BOLD
-fontSize=124
-
-numberOfQuestions=2
-numberOfROunds=2
