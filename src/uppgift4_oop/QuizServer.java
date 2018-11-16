@@ -23,8 +23,8 @@ public class QuizServer {
             
             while(true){
                 ServerSideGame game = new ServerSideGame();
-                ServerSidePlayer player1 = new ServerSidePlayer(serverSocket.accept(), game);
-                ServerSidePlayer player2 = new ServerSidePlayer(serverSocket.accept(), game);
+                ServerSidePlayer player1 = new ServerSidePlayer(serverSocket.accept(), game, 0);
+                ServerSidePlayer player2 = new ServerSidePlayer(serverSocket.accept(), game, 1);
                 player1.setOpponent(player2);
                 player2.setOpponent(player1);
                 game.setCurrentPlayer(player1);
