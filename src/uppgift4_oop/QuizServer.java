@@ -27,7 +27,7 @@ public class QuizServer {
                 ServerSidePlayer player2 = new ServerSidePlayer(serverSocket.accept(), game);
                 player1.setOpponent(player2);
                 player2.setOpponent(player1);
-                game.currentPlayer = player1;
+                game.setCurrentPlayer(player1);
                 player1.start();
                 player2.start();
                 
