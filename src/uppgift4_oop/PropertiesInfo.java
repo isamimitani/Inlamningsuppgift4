@@ -15,6 +15,8 @@ import java.util.Properties;
  * Creating FileReader object that passes in values stores in properties file. Exception included.
  */
 public class PropertiesInfo {
+  private String  numberOfQuestions;
+  private String  numberOfROunds;
 public static void main (String []args) throws IOException {
     Properties prop = new Properties();
     InputStream input = null;
@@ -25,12 +27,12 @@ public static void main (String []args) throws IOException {
 
 		// load a properties file
 		prop.load(input);
-                String questionsPerRound = prop.getProperty("number of questions");
-                String roundsPerPerson = prop.getProperty("number of rounds");
+                String questionsPerRound = prop.getProperty("numberOfQuestions");
+                String roundsPerPerson = prop.getProperty("numberOfROunds");
 
 		// get the property value and print it out
-		System.out.println(prop.getProperty("database" + questionsPerRound));
-		System.out.println(prop.getProperty("dbuser" + roundsPerPerson));
+		System.out.println(prop.getProperty("numberOfQuestions"));
+		System.out.println(prop.getProperty("numberOfROunds"));
 		
 
 	} catch (IOException ex) {
