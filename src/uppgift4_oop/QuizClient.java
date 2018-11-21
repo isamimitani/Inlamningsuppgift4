@@ -20,8 +20,7 @@ public class QuizClient {
     private ObjectInputStream in;
     
     public QuizClient(){
-        
-        
+                
         try{
             socket = new Socket(serverAddress, portNumber);
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -31,7 +30,11 @@ public class QuizClient {
             
             while((fromServer = in.readObject()) != null){
                 System.out.println(fromServer);
-                //out.writeObject("ANSWER");
+                if(fromServer.toString().equals("Question")){
+                    Quiz q = (Quiz)fromServer;
+                    System.out.println(q.getCategory() + ":" + q.getQuizText());
+                    out.writeObject("ANSWERED");
+                }
             }
          
         } catch(IOException ex){
