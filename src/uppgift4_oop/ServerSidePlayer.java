@@ -49,6 +49,22 @@ public class ServerSidePlayer extends Thread{
         this.opponent = opponent;
     }
     
+        public void otherPlayerAnswered(){
+        try {
+            out.writeObject(game.getRandomQuiz());
+        } catch (IOException ex) {
+            Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void gameIsOver(){
+        try {
+            out.writeObject("GAME_OVER");
+        } catch (IOException ex) {
+            Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /**
     * The run method of this thread.
     */
@@ -59,12 +75,31 @@ public class ServerSidePlayer extends Thread{
             
             if(mark==0){
                 out.writeObject("MESSAGE Your turn");
+                //out.writeObject(game.getRandomQuizList("World", 2));
+                out.writeObject(game.getRandomQuiz());
             }
             
             while(true){
                 Object fromClient = in.readObject();
-                if(fromClient.toString().startsWith("ANSWER")){
-                    out.writeObject("Got answer");
+                if(fromClient.toString().startsWith("ANSWERED")){
+                    System.out.println("GOT_ANSWER");
+                    game.questionCounter++;
+                    System.out.println("questioncounter: " + game.questionCounter);
+                    //If it is end of round
+                    if(game.isEndOfRound()){
+                        System.out.println("roundcounter: " + game.roundCounter);
+                        //checks if the game is not over
+                        if(!game.isEndOfGame()){
+                            game.changePlayer(opponent);
+                            //must send the result
+                        } else {    //iIf the game is over
+                            //must send the result
+                            gameIsOver();
+                            game.endGame(opponent);
+                        }
+                    } else {    //Send one more question
+                        out.writeObject(game.getRandomQuiz());
+                    }
                 } 
             }
             
