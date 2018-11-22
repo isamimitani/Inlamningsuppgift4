@@ -35,9 +35,9 @@ public class ServerSideGame {
     static{
         try{
             prop.load(new FileInputStream(PATH));
-//            System.out.println("Number of Rounds: " + prop.getProperty("numberOfRounds"));
-//            System.out.println("Number of Questions: " + prop.getProperty("numberOfQuestions"));
-//            System.out.println("File path of Questions: " + prop.getProperty("quizFilePath"));
+            System.out.println("Number of Rounds: " + prop.getProperty("numberOfRounds"));
+            System.out.println("Number of Questions: " + prop.getProperty("numberOfQuestions"));
+            System.out.println("File path of Questions: " + prop.getProperty("quizFilePath"));
             
         } catch(IOException ex){
             System.out.println("IO Exception.");

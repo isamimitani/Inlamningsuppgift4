@@ -53,6 +53,7 @@ public class ServerSidePlayer extends Thread{
     public void otherPlayerAnswered(){
         try {
             currentCategory = game.getCurrentCategory();
+            out.writeObject("YOUR_TURN");
             out.writeObject(game.getRandomQuiz(currentCategory));
         } catch (IOException ex) {
             Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,7 +62,7 @@ public class ServerSidePlayer extends Thread{
     
     public void gameIsOver(){
         try {
-            out.writeObject("GAME_OVER");
+            out.writeObject("END_OF_GAME");
         } catch (IOException ex) {
             Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -76,7 +77,7 @@ public class ServerSidePlayer extends Thread{
             out.writeObject("MESSAGE All players connected");
             
             if(mark==0){
-                out.writeObject("MESSAGE Your turn");
+                out.writeObject("YOUR_TURN");
                 currentCategory = game.getCurrentCategory();
                 out.writeObject(game.getRandomQuiz(currentCategory));
             }
@@ -92,6 +93,7 @@ public class ServerSidePlayer extends Thread{
                         System.out.println("roundcounter: " + game.roundCounter);
                         //checks if the game is not over
                         if(!game.isEndOfGame()){
+                            out.writeObject("END_OF_ROUND");
                             game.changePlayer(opponent);
                             //must send the result
                         } else {    //iIf the game is over
