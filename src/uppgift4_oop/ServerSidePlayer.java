@@ -18,7 +18,8 @@ public class ServerSidePlayer extends Thread{
     ServerSideGame game;
     ObjectOutputStream out;
     ObjectInputStream in;
-    int mark;
+    int mark; // håller koll på 0 = player1; 1=player2
+    String currentCategory;
     
     public ServerSidePlayer(Socket socket, ServerSideGame game, int mark){
         this.socket = socket;
@@ -49,9 +50,10 @@ public class ServerSidePlayer extends Thread{
         this.opponent = opponent;
     }
     
-        public void otherPlayerAnswered(){
+    public void otherPlayerAnswered(){
         try {
-            out.writeObject(game.getRandomQuiz());
+            currentCategory = game.getCurrentCategory();
+            out.writeObject(game.getRandomQuiz(currentCategory));
         } catch (IOException ex) {
             Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,8 +77,8 @@ public class ServerSidePlayer extends Thread{
             
             if(mark==0){
                 out.writeObject("MESSAGE Your turn");
-                //out.writeObject(game.getRandomQuizList("World", 2));
-                out.writeObject(game.getRandomQuiz());
+                currentCategory = game.getCurrentCategory();
+                out.writeObject(game.getRandomQuiz(currentCategory));
             }
             
             while(true){
@@ -98,7 +100,9 @@ public class ServerSidePlayer extends Thread{
                             game.endGame(opponent);
                         }
                     } else {    //Send one more question
-                        out.writeObject(game.getRandomQuiz());
+                        currentCategory = game.getCurrentCategory();
+                        out.writeObject(game.getRandomQuiz(currentCategory));
+                   
                     }
                 } 
             }

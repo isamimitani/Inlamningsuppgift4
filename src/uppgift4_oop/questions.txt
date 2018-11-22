@@ -1,6 +1,6 @@
 World,Vilken är Frankrikes huvudstad?,Paris,Berlin,Paris,Prag,Madrid
 World,Vad heter Italiens president?,Sergio Mattarella,Matteo Salvini,Giuseppe Conte,Sergio Mattarella,Sebastián Piñera
-World,Vad har Kina för valuta?,Renminbi,bolívar,Yen,Rupiah,Renminbi
+World,Vad har Kina för valuta?,Renminbi,Bolívar,Yen,Rupiah,Renminbi
 World,Vart ligger staden Córdoba?,Argentina,Argentina,Norge,Italien,Irak
 Sport,Första fotbolls VM ägde rum i?,Uruguay,Brasilien,Uruguay,Tyskland,Frankrike
 Sport,Vilken fotbollsspelare har spelat allra flest landskamper i Sverige?,Anders Svensson,Zlatan Ibrahimovic,Henrik Larson,Jimmy Durmaz,Anders Svensson
@@ -10,7 +10,7 @@ Musik,I vilket land avgjordes 2012-års Eurovision Song Contest Final?,Azerbajdz
 Musik,Vilken engelsk sångare har toppat hitlistorna med låten "Congratulations"?,Cliff Richard,Paul Young,Boy George,Cliff Richard,Joe Cocker
 Musik,Vilket år släpptes Michael Jacksons första soloalbum?,1972,1940,1972,1998,2002
 Musik,Hur gammal blev Elvis Presley?,42,42,32,56,49
-Histora,Vad användes de egyptiska pyramiderna till?,Gravplatser,Förådskammare,Offerplatser,Utkikstorn,Gravplatser
-Histora,Vem är känd för att ha uttalat: "I Have a Dream"?,Martin Luther King,Winston Churchill,John F. Kennedy,John Lennon,Martin Luther King
-Histora,Vilket land associerar man främst med namnet Djingis Khan?,Mongoliet,Kina,Mongoliet,Vietnam,Iran
-Histora,Vilket afrikanskt land hette tidigare Sydrhodesia?,Zimbabwe,Kenya,Zimbabwe,Tunis,Egypy
+Historia,Vad användes de egyptiska pyramiderna till?,Gravplatser,Förådskammare,Offerplatser,Utkikstorn,Gravplatser
+Historia,Vem är känd för att ha uttalat: "I Have a Dream"?,Martin Luther King,Winston Churchill,John F. Kennedy,John Lennon,Martin Luther King
+Historia,Vilket land associerar man främst med namnet Djingis Khan?,Mongoliet,Kina,Mongoliet,Vietnam,Iran
+Historia,Vilket afrikanskt land hette tidigare Sydrhodesia?,Zimbabwe,Kenya,Zimbabwe,Tunis,Egypten
