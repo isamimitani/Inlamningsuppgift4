@@ -18,12 +18,13 @@ import java.util.Scanner;
 public class ServerSideGame {
     
     private static Properties prop = new Properties();
-    private static final String PATH = "src\\uppgift4_oop\\game.properties";
+    private static final String PATH = "src//uppgift4_oop//game.properties";
 
     private ServerSidePlayer currentPlayer; 
     private ArrayList<String> categories = new ArrayList<>();
     private ArrayList<Quiz> questions = new ArrayList<>();   
     private ArrayList<Quiz> sendList = new ArrayList<>();
+    private String currentCategory;
     
     private int numOfRounds;
     private int numOfQuestions;
@@ -46,8 +47,11 @@ public class ServerSideGame {
     public ServerSideGame(){
         initQuestions();
         initCategories();
+        currentCategory = getRandomCategory();
         numOfRounds = Integer.parseInt(prop.getProperty("numberOfRounds"));
         numOfQuestions = Integer.parseInt(prop.getProperty("numberOfQuestions"));
+        
+       
     }
     
     private void initQuestions(){
@@ -86,7 +90,7 @@ public class ServerSideGame {
         return category;
     }
     
-    public <T>T getRandom(String s){
+    public <T>T getRandom(String s){ 
         if(s.equalsIgnoreCase("Quiz")){
             Quiz quiz = null;
             Random rand = new Random();
@@ -129,6 +133,11 @@ public class ServerSideGame {
         return list;
     }
     
+   public String getCurrentCategory(){
+         return currentCategory;
+    }
+
+    
     public List<String> getCategories(){
         return categories;
     }
@@ -161,6 +170,10 @@ public class ServerSideGame {
         if(questionCounter == numOfQuestions){
             questionCounter = 0;
             roundCounter++;
+            if(roundCounter % 2 ==0){
+                currentCategory= getRandomCategory();
+                System.out.println("Category has changed");
+            }
             System.out.println("End of Round..");
             return true;
         } else {
