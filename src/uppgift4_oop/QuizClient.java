@@ -33,6 +33,8 @@ public class QuizClient {
                 if(fromServer.toString().equals("Question")){
                     Quiz q = (Quiz)fromServer;
                     System.out.println(q.getCategory() + ":" + q.getQuizText());
+                    System.out.println(q.getAlt1() + "," + q.getAlt2() +","+
+                            q.getAlt3() + "," + q.getAlt4());
                     out.writeObject("ANSWERED");
                 }
             }
