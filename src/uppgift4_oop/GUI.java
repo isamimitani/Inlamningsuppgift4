@@ -159,7 +159,7 @@ class GUI extends JFrame {
 
             
             resultatMain.setLayout(new BoxLayout(resultatMain, BoxLayout.PAGE_AXIS)); 
-            resultatMain.setLayout(new GridLayout(2, 3, 10, 10));
+            resultatMain.setLayout(new GridLayout(2, 3, 10, 10)); // ROWS,COLS,Hgap,Vgap
             resultatMain.add(spelare);
             resultatMain.add(runda);  
             resultatMain.add(resultat); 
