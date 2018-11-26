@@ -54,8 +54,8 @@ class GUI extends JFrame {
     JTextArea question;
     
     boolean currentAnswer = false;
-    int[] myResult;
-    int[] opponentResult;
+//    int[] myResult;
+//    int[] opponentResult;
     
     final String pointsNull = "src//images//pointsNull.png"; 
     final String pointsTrue = "src//images//pointsTrue.png"; 
@@ -159,7 +159,7 @@ class GUI extends JFrame {
 
             
             resultatMain.setLayout(new BoxLayout(resultatMain, BoxLayout.PAGE_AXIS)); 
-            resultatMain.setLayout(new GridLayout(2, 3, 10, 10)); // ROWS,COLS,Hgap,Vgap
+           // resultatMain.setLayout(new GridLayout(2, 3, 10, 10)); // ROWS,COLS,Hgap,Vgap
             resultatMain.add(spelare);
             resultatMain.add(runda);  
             resultatMain.add(resultat); 
