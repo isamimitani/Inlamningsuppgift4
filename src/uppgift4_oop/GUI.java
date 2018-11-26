@@ -26,6 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 /**
@@ -56,13 +57,18 @@ class GUI extends JFrame {
     
     final String pointsNull = "src//images//pointsNull.png"; 
     final String pointsTrue = "src//images//pointsTrue.png"; 
-    final String pointsFalse = "src//images//pointsFalse.png"; 
+    final String pointsFalse = "src//images//pointsFalse.png";  
+    
+    JPanel spelare = new JPanel();
+    JPanel runda = new JPanel(); 
+    JPanel resultat = new JPanel();
+    JPanel resultatMain = new JPanel();
     
     public GUI(QuizClient client) throws IOException
     { 
         this.client = client;
         
-        Font runda = new Font("Ariel",Font.BOLD, 12);
+        Font omgång = new Font("Ariel",Font.BOLD, 12);
         Font fråga = new Font("Ariel",Font.ITALIC, 14);
         //Main panel för frågespel
         top.setLayout(new BorderLayout());
@@ -70,7 +76,7 @@ class GUI extends JFrame {
         
         text = new JLabel("Runda x mot Spelare X  ");  
         text.setForeground(Color.WHITE);
-        text.setFont(runda);
+        text.setFont(omgång);
         points.setBackground(Color.decode("#317AD5"));
         top.add(points, WEST); 
         top.add(text, EAST);
@@ -114,12 +120,52 @@ class GUI extends JFrame {
             }
         });
         
-        //Resultat panel för resultat för runda samt tidigare rundor etc.
+        //Resultat panel för resultat för runda samt tidigare rundor etc. 
+            Font players = new Font("",Font.BOLD,16);
+            Font rounds = new Font("",Font.BOLD,15);
+            Font big = new Font("",Font.BOLD, 30);
+           
+            spelare.setLayout(new BorderLayout()); 
+            spelare.setBackground(Color.decode("#518FDB"));
+            JLabel spelareA = new JLabel(" Spelare A");  
+            JLabel spelareB = new JLabel("Spelare B ");  
+                spelareA.setFont(players);
+                spelareB.setFont(players);
+            spelare.add(spelareA, WEST); 
+            spelare.add(spelareB, EAST); 
+            
+            runda.setLayout(new GridLayout(4,1,20,20));
+            for(int z = 1; z <= 4; z++){                //Ändra värdet på 4:an till det variabel som motsvarar runda.
+                JLabel scoreA = new JLabel("x", SwingConstants.CENTER); 
+                JLabel rundaX = new JLabel(" Runda " + z, SwingConstants.CENTER); 
+                JLabel scoreB = new JLabel("x" , SwingConstants.CENTER);  
+                    scoreA.setFont(rounds);
+                    rundaX.setFont(rounds);
+                    scoreB.setFont(rounds);
+                runda.setBackground(Color.decode("#518FDB"));
+                runda.add(scoreA); 
+                runda.add(rundaX);  
+                runda.add(scoreB); 
+            }  
+            JLabel scoreCurrentA = new JLabel("x" + " - ", SwingConstants.CENTER);
+            JLabel scoreCurrentB = new JLabel("x", SwingConstants.CENTER); 
+                scoreCurrentA.setFont(big); 
+                scoreCurrentB.setFont(big); 
+            resultat.setBackground(Color.decode("#518FDB"));
+            resultat.add(scoreCurrentA); 
+            resultat.add(scoreCurrentB);
+
+            
+            resultatMain.setLayout(new BoxLayout(resultatMain, BoxLayout.PAGE_AXIS));  
+            resultatMain.add(spelare);
+            resultatMain.add(runda);  
+            resultatMain.add(resultat); 
         
         BufferedImage background = ImageIO.read(new File("src//images//background.jpg")); 
         jrf.setContentPane(new ImagePanel(background));
         
-        jrf.add(main); 
+        jrf.add(main);  
+        //jrf.add(resultatMain);
         jrf.pack(); 
         jrf.setLocation(100, 100); 
         jrf.setSize(400,600);
