@@ -232,7 +232,7 @@ class GUI extends JFrame {
                 this.add(svar);
             });
             next.setVisible(false);
-            revalidate();    
+            jrf.revalidate();    
         }
 
         @Override
