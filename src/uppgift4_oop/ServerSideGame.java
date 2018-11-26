@@ -18,12 +18,13 @@ import java.util.Scanner;
 public class ServerSideGame {
     
     private static Properties prop = new Properties();
-    private static final String PATH = "src\\uppgift4_oop\\game.properties";
+    private static final String PATH = "src//uppgift4_oop//game.properties";
 
     private ServerSidePlayer currentPlayer; 
     private ArrayList<String> categories = new ArrayList<>();
     private ArrayList<Quiz> questions = new ArrayList<>();   
     private ArrayList<Quiz> sendList = new ArrayList<>();
+    private String currentCategory;
     
     private int numOfRounds;
     private int numOfQuestions;
@@ -34,9 +35,9 @@ public class ServerSideGame {
     static{
         try{
             prop.load(new FileInputStream(PATH));
-//            System.out.println("Number of Rounds: " + prop.getProperty("numberOfRounds"));
-//            System.out.println("Number of Questions: " + prop.getProperty("numberOfQuestions"));
-//            System.out.println("File path of Questions: " + prop.getProperty("quizFilePath"));
+            System.out.println("Number of Rounds: " + prop.getProperty("numberOfRounds"));
+            System.out.println("Number of Questions: " + prop.getProperty("numberOfQuestions"));
+            System.out.println("File path of Questions: " + prop.getProperty("quizFilePath"));
             
         } catch(IOException ex){
             System.out.println("IO Exception.");
@@ -46,8 +47,11 @@ public class ServerSideGame {
     public ServerSideGame(){
         initQuestions();
         initCategories();
+        currentCategory = getRandomCategory();
         numOfRounds = Integer.parseInt(prop.getProperty("numberOfRounds"));
         numOfQuestions = Integer.parseInt(prop.getProperty("numberOfQuestions"));
+        
+       
     }
     
     private void initQuestions(){
@@ -71,13 +75,14 @@ public class ServerSideGame {
             }
         }
     }
-    
-    public Quiz getRandomQuiz(){
-        Quiz quiz = null;
-        Random rand = new Random();
-        quiz = questions.get(rand.nextInt(questions.size()));
-        return quiz;
-    }
+
+//////Unused method//////  
+//    public Quiz setRandomQuiz(){
+//        Quiz quiz = null;
+//        Random rand = new Random();
+//        quiz = questions.get(rand.nextInt(questions.size()));
+//        return quiz;
+//    }
     
     public String getRandomCategory(){
         String category = null;
@@ -85,24 +90,25 @@ public class ServerSideGame {
         category = categories.get(rand.nextInt(categories.size()));
         return category;
     }
+  
+//////Unused method//////      
+//    public <T>T getRandom(String s){ 
+//        if(s.equalsIgnoreCase("Quiz")){
+//            Quiz quiz = null;
+//            Random rand = new Random();
+//            quiz = questions.get(rand.nextInt(questions.size()));
+//            return (T)quiz;
+//        } else if(s.equalsIgnoreCase("Category")){
+//            String category = null;
+//            Random rand = new Random();
+//            category = categories.get(rand.nextInt(categories.size()));
+//            return (T)category;
+//        } else {
+//            return null;
+//        }
+//    }
     
-    public <T>T getRandom(String s){
-        if(s.equalsIgnoreCase("Quiz")){
-            Quiz quiz = null;
-            Random rand = new Random();
-            quiz = questions.get(rand.nextInt(questions.size()));
-            return (T)quiz;
-        } else if(s.equalsIgnoreCase("Category")){
-            String category = null;
-            Random rand = new Random();
-            category = categories.get(rand.nextInt(categories.size()));
-            return (T)category;
-        } else {
-            return null;
-        }
-    }
-    
-    public Quiz getRandomQuiz(String category){
+    public void setRandomQuiz(String category){
         Quiz quiz = null;
         ArrayList<Quiz> list = new ArrayList<>();
         for(Quiz q : questions){
@@ -112,23 +118,32 @@ public class ServerSideGame {
         }
         Random rand = new Random();
         quiz = list.get(rand.nextInt(list.size()));
-        return quiz;
+        sendList.add(quiz);
     }
     
-        public List getRandomQuizList(String category, int num){
-        Quiz quiz = null;
-        int count = 0;
-        Random rand = new Random();
-        ArrayList<Quiz> list = new ArrayList<>();
-        while(list.size()!=num){
-            quiz = questions.get(rand.nextInt(questions.size()));
-            if(quiz.getCategory().equals(category)){
-                list.add(quiz);
-            }
-        }
-        return list;
+    public Quiz getQuiz(int i){
+        return sendList.get(i);
     }
+
+//////Unused method//////      
+//    public List getRandomQuizList(String category, int num){
+//        Quiz quiz = null;
+//        int count = 0;
+//        Random rand = new Random();
+//        ArrayList<Quiz> list = new ArrayList<>();
+//        while(list.size()!=num){
+//            quiz = questions.get(rand.nextInt(questions.size()));
+//            if(quiz.getCategory().equals(category)){
+//                list.add(quiz);
+//            }
+//        }
+//        return list;
+//    }
     
+   public String getCurrentCategory(){
+         return currentCategory;
+    }
+   
     public List<String> getCategories(){
         return categories;
     }
@@ -141,11 +156,16 @@ public class ServerSideGame {
         currentPlayer = player;
         currentPlayer.otherPlayerAnswered();
         //** TODO: måste skicka resultat av spelaren som svarade sist
+        int[] array ={1,1,1,1};
+        currentPlayer.sendOpponentResult(array);
     }
     
     public void endGame(ServerSidePlayer player){
         currentPlayer = player;
         player.gameIsOver();
+        //** TODO: måste skicka resultat av spelaren som svarade sist
+        int[] array ={1,1,1,1};
+        currentPlayer.sendOpponentResult(array);
     }
        
     public boolean isEndOfGame(){
@@ -161,6 +181,10 @@ public class ServerSideGame {
         if(questionCounter == numOfQuestions){
             questionCounter = 0;
             roundCounter++;
+            if(roundCounter % 2 ==0){
+                currentCategory= getRandomCategory();
+                System.out.println("Category has changed");
+            }
             System.out.println("End of Round..");
             return true;
         } else {
