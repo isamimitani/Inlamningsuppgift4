@@ -47,7 +47,7 @@ class GUI extends JFrame {
     JPanel main = new JPanel();
    
     JButton next = new JButton("next");
-    JButton next2 = new JButton("result");
+    JButton toResult = new JButton("result");
     JButton start = new JButton("start");
     JLabel message = new JLabel("");
     
@@ -77,7 +77,6 @@ class GUI extends JFrame {
         this.client = client;
         
         createMainPanel();
-        //createResultPanel();
 
         BufferedImage background = ImageIO.read(new File("src//images//background.jpg")); 
         jrf.setContentPane(new ImagePanel(background));
@@ -132,10 +131,10 @@ class GUI extends JFrame {
         // next button and its action
         nextpanel.setBackground(Color.decode("#317AD5"));
         nextpanel.add(next);
-        nextpanel.add(next2);
+        nextpanel.add(toResult);
         main.add(nextpanel);
         next.setVisible(false);
-        next2.setVisible(false);
+        toResult.setVisible(false);
         next.addActionListener(ae -> {
             client.currentQuiz = null;
             client.saveAnswer(currentAnswer);
@@ -144,12 +143,26 @@ class GUI extends JFrame {
                 spel.game();
             } else {
                 next.setVisible(false);
-                next2.setVisible(true);
+                toResult.setVisible(true);
                 jrf.revalidate();
             }
         });
-        next2.addActionListener(ae->{
+        toResult.addActionListener(ae->{
             jrf.setVisible(false);
+            
+            if(client.mark == 1){
+                int temp = 0;
+                System.out.println("toResult roundcounter " +client.roundcounter);
+                for(int i=(client.roundcounter-1)*client.numberOfQuestions; 
+                    i<(client.roundcounter-1)*client.numberOfQuestions+client.numberOfQuestions; i++){
+                    temp += client.opponentResult[i];
+                }
+                setOpponentPoints(temp);
+                if(client.roundcounter == client.numberOfRounds){
+                    setOpponentPoints(client.getTotalPoints(client.opponentResult));
+                }
+            }
+            
             jrf.remove(main);
             jrf.add(resultatMain);
             start.setVisible(false);
@@ -166,8 +179,8 @@ class GUI extends JFrame {
 
         spelare.setLayout(new BorderLayout()); 
         spelare.setBackground(Color.decode("#518FDB"));
-        JLabel spelareA = new JLabel("Spelare A");  
-        JLabel spelareB = new JLabel("Spelare B ");  
+        JLabel spelareA = new JLabel("YOU");  
+        JLabel spelareB = new JLabel("OPPONENT");  
         spelareA.setFont(players);
         spelareB.setFont(players);
         spelare.add(spelareA, WEST); 
@@ -187,28 +200,39 @@ class GUI extends JFrame {
 //            score.add(scoreB); 
 //        }  
         score.setLayout(new GridLayout(1,client.numberOfRounds,20,20));
-        rounds.setLayout(new GridLayout(client.numberOfRounds,1, 20, 20));
+        rounds.setLayout(new GridLayout(client.numberOfRounds+1,1, 20, 20));
+        myScore.setLayout(new GridLayout(client.numberOfRounds+1,1, 20, 20));
+        opponentScore.setLayout(new GridLayout(client.numberOfRounds+1,1, 20, 20));
         for(int z = 1; z <= client.numberOfRounds; z++){                //Ändra värdet på 4:an till det variabel som motsvarar score.
             JLabel rundaX = new JLabel("Runda " + z, SwingConstants.CENTER); 
             rundaX.setFont(round);
-            
-            score.setBackground(Color.decode("#518FDB"));
-            score.add(rundaX);  
-        }  
-        JLabel scoreCurrentA = new JLabel("x", SwingConstants.CENTER);
-        JLabel between = new JLabel(" Total result shows here ", SwingConstants.CENTER);
-        JLabel scoreCurrentB = new JLabel("x", SwingConstants.CENTER); 
-        scoreCurrentA.setFont(big); 
-        scoreCurrentB.setFont(big); 
-        resultat.setBackground(Color.decode("#518FDB"));
-        scoreCurrentA.setVisible(true);
-        between.setVisible(true);
-        scoreCurrentB.setVisible(true);
-        resultat.add(scoreCurrentA); 
-        resultat.add(between);
-        resultat.add(scoreCurrentB);
+            rounds.add(rundaX);
+        }
+        JLabel total = new JLabel("Total", SwingConstants.CENTER); 
+        total.setFont(round);
+        rounds.add(total);
+        myScore.setBackground(Color.decode("#518FDB"));
+        rounds.setBackground(Color.decode("#518FDB"));
+        opponentScore.setBackground(Color.decode("#518FDB"));
+        score.setBackground(Color.decode("#518FDB"));
+        score.add(myScore);
+        score.add(rounds);
+        score.add(opponentScore);
+//        JLabel scoreCurrentA = new JLabel("x", SwingConstants.CENTER);
+//        JLabel between = new JLabel(" Total result shows here ", SwingConstants.CENTER);
+//        JLabel scoreCurrentB = new JLabel("x", SwingConstants.CENTER); 
+//        scoreCurrentA.setFont(big); 
+//        scoreCurrentB.setFont(big); 
+//        resultat.setBackground(Color.decode("#518FDB"));
+//        scoreCurrentA.setVisible(true);
+//        between.setVisible(true);
+//        scoreCurrentB.setVisible(true);
+//        resultat.add(scoreCurrentA); 
+//        resultat.add(between);
+//        resultat.add(scoreCurrentB);
         
         messagepanel.add(message);
+        //messagepanel.setBackground(Color.decode("#518FDB"));
 
         startpanel.setBackground(Color.decode("#518FDB"));
         startpanel.add(start);
@@ -222,7 +246,7 @@ class GUI extends JFrame {
         resultatMain.setLayout(new BoxLayout(resultatMain, BoxLayout.PAGE_AXIS));  
         resultatMain.add(spelare);
         resultatMain.add(score);  
-        resultatMain.add(resultat); 
+        //resultatMain.add(resultat); 
         resultatMain.add(messagepanel);
         resultatMain.add(startpanel);
         resultatMain.setSize(300, 150);
@@ -230,8 +254,16 @@ class GUI extends JFrame {
         jrf.setVisible(true);
     }
     
-    public void setPoints(int points, int round){
-        int total = client.getTotalPoints();
+    public void setMyPoints(int points){
+        JLabel point = new JLabel(String.valueOf(points));
+        myScore.add(point);
+        jrf.revalidate();
+    }
+    
+    public void setOpponentPoints(int points){
+        JLabel point = new JLabel(String.valueOf(points));
+        opponentScore.add(point);
+        jrf.revalidate();        
     }
     
     public void showStartButton(){
@@ -303,7 +335,7 @@ class GUI extends JFrame {
                 this.add(svar);
             });
             next.setVisible(false);
-            next2.setVisible(false);
+            toResult.setVisible(false);
             jrf.revalidate();    
         }
 

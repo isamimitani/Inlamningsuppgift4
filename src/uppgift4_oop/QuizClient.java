@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -26,12 +25,14 @@ public class QuizClient {
     public Quiz currentQuiz;
     
     private int[] myResult;
-    private int[] opponentResult;
-    private List<Integer> opponentResult2;
-    private int questioncounter = 0;
+    public int[] opponentResult;
+    public int questioncounter = 0;
+    public int roundcounter = 0;
+    public int mark;
     
     public int numberOfRounds;
     public int numberOfQuestions;
+    
     
     public QuizClient(){
                 
@@ -68,10 +69,21 @@ public class QuizClient {
         } else {
             myResult[questioncounter++] = 0;
         }
+        
+        if(questioncounter % numberOfQuestions == 0){
+            int temp = 0;
+            for(int i=roundcounter*numberOfQuestions; 
+                    i<roundcounter*numberOfQuestions+numberOfQuestions; i++){
+                temp += myResult[i];
+            }
+            gui.setMyPoints(temp);
+            roundcounter++;
+        }
+        
     }
     
-    public int getTotalPoints(){
-        return IntStream.of(myResult).sum();
+    public int getTotalPoints(int[] array){
+        return IntStream.of(array).sum();
     }
     
     public void sendAnswer(boolean correct){
@@ -147,6 +159,7 @@ public class QuizClient {
                         });
                         break;
                     case "YOUR_TURN":
+                        mark = Character.getNumericValue(fromServer.toString().charAt(10));
                         System.out.println("My turn! " + fromServer.toString());
                         SwingUtilities.invokeLater(() -> {
                             gui.setMessage("Your turn.");
@@ -157,6 +170,10 @@ public class QuizClient {
                         System.out.println("END!!!!");
                         SwingUtilities.invokeLater(() -> {
                             gui.setMessage("Game is over!");
+                            gui.setMyPoints(getTotalPoints(myResult));
+                            if(mark==0){
+                                gui.setOpponentPoints(getTotalPoints(opponentResult));
+                            }
                         });
                         for(int i: myResult)
                             System.out.print(i);
@@ -172,7 +189,16 @@ public class QuizClient {
                         for(int i=0; i<opponentResult.length; i++){
                             System.out.print(opponentResult[i]);
                         }
-                        System.out.println();
+                        if(mark == 0){
+                            int temp = 0;
+                            System.out.println("RESULT roundcounter " + roundcounter);
+                            for(int i=(roundcounter-1)*numberOfQuestions; 
+                                    i<(roundcounter-1)*numberOfQuestions+2; i++){
+                                temp += opponentResult[i];
+                            }
+                            gui.setOpponentPoints(temp);
+                            System.out.println();
+                        }
                         break; 
                     default:
                         System.out.println(fromServer);

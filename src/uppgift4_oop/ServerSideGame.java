@@ -160,8 +160,8 @@ public class ServerSideGame {
         }
         System.out.println();
         currentPlayer = player;
+        currentPlayer.otherPlayerAnswered();
         currentPlayer.sendOpponentResult(array);
-        currentPlayer.otherPlayerAnswered();      
         
     }
     
