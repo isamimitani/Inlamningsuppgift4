@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -26,6 +28,7 @@ public class QuizClient {
     
     private int[] myResult;
     private int[] opponentResult;
+    private List<Integer> opponentResult2;
     private int questioncounter = 0;
     
     public int numberOfRounds;
@@ -118,9 +121,11 @@ public class QuizClient {
                         // Must do this, otherwise the program does not work 
                         SwingUtilities.invokeLater(() -> {
                             gui.setPointBox();
+                            gui.createResultPanel();
                         });
                         
                         //anpassa GUI efter antal ronder och antal frågor
+                        fromServer = null;
                         break;
                     case "QUESTION":
                         currentQuiz = (Quiz)fromServer;
@@ -132,18 +137,25 @@ public class QuizClient {
                         });
                                           
                         System.out.println(currentQuiz.getCategory() + ":" + currentQuiz.getQuizText());
+                        fromServer = null;
                         break;
                     case "MESSAGE":
                         // visa meddelande i en label i väntläge?
                         System.out.println("Got a message.");
+                        fromServer = null;
                         break;
                     case "END_OF_ROUND":
                         //**TODO**byta panel till väntläge visa att man måste vänta tills opponenten svarar
                         System.out.println("End of round. Must wait!");
+                        fromServer = null;
                         break;
                     case "YOUR_TURN":
                         //**TODO**: visa "start" knapp på väntläge genom att synliggöra knappen på panelen
                         System.out.println("My turn! " + fromServer.toString());
+                        SwingUtilities.invokeLater(() -> {
+                            gui.showStartButton();
+                        });
+                        fromServer = null;
                         break;
                     case "END_OF_GAME":                        
                         System.out.println("END!!!!");
@@ -151,15 +163,28 @@ public class QuizClient {
                             System.out.print(i);
                         System.out.println();
                         //gemför resultatet och visa vem som vann eller förlorade
-                        isWinner();                       
+                        isWinner();     
+                        fromServer = null;
                         break;
                     case "RESULT":
                         //tar emot int[] array som är opponentens resultat och lagra den som opponentens resultat
-                        fromServer = in.readObject();            
+                        fromServer = in.readObject(); 
                         opponentResult =(int[])fromServer;
+                        //opponentResult2=null;
+                        //opponentResult2 = (List<Integer>)fromServer;
+                        System.out.println("Got opponent result");
+                        for(int i=0; i<opponentResult.length; i++){
+                            System.out.print(opponentResult[i]);
+                        }
+//                        for(int i=0; i<opponentResult2.size(); i++){
+//                            System.out.print(opponentResult2.get(i));
+//                        }
+                        System.out.println();
+                        fromServer = null;
                         break; 
                     default:
                         System.out.println(fromServer);
+                        fromServer = null;
                 }
             }
         } catch (IOException | ClassNotFoundException ex) {

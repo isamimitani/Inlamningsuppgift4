@@ -154,10 +154,14 @@ public class ServerSideGame {
     
     public void changePlayer(ServerSidePlayer player){
         int[] array = currentPlayer.result;
+        //List<Integer> array = currentPlayer.result2;
         System.out.println("sending opponent result");
         for(int i=0; i<array.length; i++){
             System.out.print(array[i]);
         }
+//        for(int i=0; i<array.size(); i++){
+//            System.out.print(array.get(i));
+//        }
         System.out.println();
         currentPlayer = player;
         currentPlayer.sendOpponentResult(array);
@@ -167,10 +171,14 @@ public class ServerSideGame {
     
     public void endGame(ServerSidePlayer player){
         int[] array = currentPlayer.result;
+        //List<Integer> array = currentPlayer.result2;
         System.out.println("sending opponent result");
         for(int i=0; i<array.length; i++){
             System.out.print(array[i]);
         }
+//        for(int i=0; i<array.size(); i++){
+//            System.out.print(array.get(i));
+//        }
         System.out.println();
         currentPlayer = player;
         currentPlayer.sendOpponentResult(array);

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,15 +68,16 @@ public class ServerSidePlayer extends Thread{
         }
     }
     
-    public void sendOpponentResult(int[] result){
+    public void sendOpponentResult(int[] res){
         try {
             out.writeObject("RESULT");
             System.out.println("method:sendOpponentResult");
-            for(int i=0; i<result.length; i++){
-                System.out.print(result[i]);
+            for(int i=0; i<res.length; i++){
+                System.out.print(res[i]);
             }
-            out.flush();
-            out.writeObject(result);
+            //out.flush();
+            out.reset();
+            out.writeObject(res);
         } catch (IOException ex) {
             Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -107,7 +110,6 @@ public class ServerSidePlayer extends Thread{
                 Object fromClient = in.readObject();
                 if(fromClient.toString().startsWith("ANSWERED")){
                     System.out.println("GOT_ANSWER: " + fromClient.toString());
-                    //**TODO** måste spara resultatet
                     int point = Character.getNumericValue(fromClient.toString().charAt(9));
                     System.out.println("addin point " + point + " to position " + (questioncounter-1));
                     result[questioncounter-1] = point;
