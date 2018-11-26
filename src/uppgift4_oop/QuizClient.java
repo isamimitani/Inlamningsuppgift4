@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,10 +112,9 @@ public class QuizClient {
                         //lagra antal ronder och antal frågor  i variabler
                         numberOfRounds = Character.getNumericValue(fromServer.toString().charAt(8));
                         numberOfQuestions = Character.getNumericValue(fromServer.toString().charAt(10));
-                        System.out.println(numberOfRounds +" " + numberOfQuestions);
+                        
                         //initiera int[] med antal ronder och antal frågar
                         myResult = new int[numberOfRounds*numberOfQuestions];
-                        //opponentResult = new int[numberOfRounds*numberOfQuestions];
                         
                         // Must do this, otherwise the program does not work 
                         SwingUtilities.invokeLater(() -> {
@@ -125,66 +123,59 @@ public class QuizClient {
                         });
                         
                         //anpassa GUI efter antal ronder och antal frågor
-                        fromServer = null;
                         break;
                     case "QUESTION":
                         currentQuiz = (Quiz)fromServer;
                         
-                        // Must do this, otherwise the program does not work 
                         SwingUtilities.invokeLater(() -> {
                             gui.setQuiz(currentQuiz);
-                            gui.revalidate();
                         });
                                           
                         System.out.println(currentQuiz.getCategory() + ":" + currentQuiz.getQuizText());
-                        fromServer = null;
                         break;
                     case "MESSAGE":
-                        // visa meddelande i en label i väntläge?
                         System.out.println("Got a message.");
-                        fromServer = null;
+                        final String message = fromServer.toString();
+                        SwingUtilities.invokeLater(() -> {
+                            gui.setMessage(message);
+                        });
                         break;
                     case "END_OF_ROUND":
-                        //**TODO**byta panel till väntläge visa att man måste vänta tills opponenten svarar
                         System.out.println("End of round. Must wait!");
-                        fromServer = null;
+                        SwingUtilities.invokeLater(() -> {
+                            gui.setMessage("Opponent's turn. You must wait..");
+                        });
                         break;
                     case "YOUR_TURN":
-                        //**TODO**: visa "start" knapp på väntläge genom att synliggöra knappen på panelen
                         System.out.println("My turn! " + fromServer.toString());
                         SwingUtilities.invokeLater(() -> {
+                            gui.setMessage("Your turn.");
                             gui.showStartButton();
                         });
-                        fromServer = null;
                         break;
                     case "END_OF_GAME":                        
                         System.out.println("END!!!!");
+                        SwingUtilities.invokeLater(() -> {
+                            gui.setMessage("Game is over!");
+                        });
                         for(int i: myResult)
                             System.out.print(i);
                         System.out.println();
                         //gemför resultatet och visa vem som vann eller förlorade
                         isWinner();     
-                        fromServer = null;
                         break;
                     case "RESULT":
                         //tar emot int[] array som är opponentens resultat och lagra den som opponentens resultat
                         fromServer = in.readObject(); 
                         opponentResult =(int[])fromServer;
-                        //opponentResult2=null;
-                        //opponentResult2 = (List<Integer>)fromServer;
                         System.out.println("Got opponent result");
                         for(int i=0; i<opponentResult.length; i++){
                             System.out.print(opponentResult[i]);
                         }
-//                        for(int i=0; i<opponentResult2.size(); i++){
-//                            System.out.print(opponentResult2.get(i));
-//                        }
                         System.out.println();
-                        fromServer = null;
                         break; 
                     default:
                         System.out.println(fromServer);
-                        fromServer = null;
                 }
             }
         } catch (IOException | ClassNotFoundException ex) {

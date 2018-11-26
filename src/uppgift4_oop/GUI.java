@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -69,6 +68,7 @@ class GUI extends JFrame {
     JPanel opponentScore = new JPanel();
     JPanel rounds = new JPanel();
     JPanel resultat = new JPanel();
+    JPanel messagepanel = new JPanel();
     JPanel startpanel = new JPanel();
     JPanel resultatMain = new JPanel();
     
@@ -207,6 +207,8 @@ class GUI extends JFrame {
         resultat.add(scoreCurrentA); 
         resultat.add(between);
         resultat.add(scoreCurrentB);
+        
+        messagepanel.add(message);
 
         startpanel.setBackground(Color.decode("#518FDB"));
         startpanel.add(start);
@@ -221,7 +223,7 @@ class GUI extends JFrame {
         resultatMain.add(spelare);
         resultatMain.add(score);  
         resultatMain.add(resultat); 
-        resultatMain.add(message);
+        resultatMain.add(messagepanel);
         resultatMain.add(startpanel);
         resultatMain.setSize(300, 150);
         jrf.add(resultatMain);

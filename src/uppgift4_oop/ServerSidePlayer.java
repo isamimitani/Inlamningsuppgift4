@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -111,13 +109,10 @@ public class ServerSidePlayer extends Thread{
                 if(fromClient.toString().startsWith("ANSWERED")){
                     System.out.println("GOT_ANSWER: " + fromClient.toString());
                     int point = Character.getNumericValue(fromClient.toString().charAt(9));
-                    System.out.println("addin point " + point + " to position " + (questioncounter-1));
                     result[questioncounter-1] = point;
-                    for(int i=0; i<result.length; i++){
-                            System.out.print(result[i]);
-                        }
                     game.questionCounter++;
                     System.out.println("questioncounter: " + game.questionCounter);
+                    
                     //If it is end of round
                     if(game.isEndOfRound()){
                         System.out.println("roundcounter: " + game.roundCounter);
