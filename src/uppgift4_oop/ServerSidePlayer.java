@@ -20,6 +20,7 @@ public class ServerSidePlayer extends Thread{
     ObjectInputStream in;
     int mark; // håller koll på 0 = player1; 1=player2
     String currentCategory;
+    int questioncounter = 0;
     
     public ServerSidePlayer(Socket socket, ServerSideGame game, int mark){
         this.socket = socket;
@@ -33,19 +34,16 @@ public class ServerSidePlayer extends Thread{
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            out.writeObject("WELCOME");
+            //**TODO** must send number of rounds and questions. get info from game
+            out.writeObject("WELCOME 2 2");
             out.writeObject("MESSAGE Waiting for opponent to connect");
             
         } catch (IOException ex) {
             Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-     
+        }  
+        
     }
     
-    
-    /**
-    * Accepts notification of who the opponent is.
-    */
     public void setOpponent(ServerSidePlayer opponent) {
         this.opponent = opponent;
     }
@@ -53,8 +51,22 @@ public class ServerSidePlayer extends Thread{
     public void otherPlayerAnswered(){
         try {
             currentCategory = game.getCurrentCategory();
-            out.writeObject("YOUR_TURN");
-            out.writeObject(game.getRandomQuiz(currentCategory));
+            out.writeObject("YOUR_TURN " + mark);
+            if(mark == 0){
+                game.setRandomQuiz(currentCategory);
+                out.writeObject(game.getQuiz(questioncounter++));
+            } else {
+                out.writeObject(game.getQuiz(questioncounter++));
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void sendOpponentResult(int[] result){
+        try {
+            out.writeObject("RESULT");
+            out.writeObject(result);
         } catch (IOException ex) {
             Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -77,15 +89,17 @@ public class ServerSidePlayer extends Thread{
             out.writeObject("MESSAGE All players connected");
             
             if(mark==0){
-                out.writeObject("YOUR_TURN");
+                out.writeObject("YOUR_TURN " + mark);
                 currentCategory = game.getCurrentCategory();
-                out.writeObject(game.getRandomQuiz(currentCategory));
+                game.setRandomQuiz(currentCategory);
+                out.writeObject(game.getQuiz(questioncounter++));
             }
             
             while(true){
                 Object fromClient = in.readObject();
                 if(fromClient.toString().startsWith("ANSWERED")){
-                    System.out.println("GOT_ANSWER");
+                    //**TODO** måste spara resultatet
+                    System.out.println("GOT_ANSWER: " + fromClient.toString());
                     game.questionCounter++;
                     System.out.println("questioncounter: " + game.questionCounter);
                     //If it is end of round
@@ -95,23 +109,24 @@ public class ServerSidePlayer extends Thread{
                         if(!game.isEndOfGame()){
                             out.writeObject("END_OF_ROUND");
                             game.changePlayer(opponent);
-                            //must send the result
                         } else {    //iIf the game is over
                             //must send the result
                             gameIsOver();
                             game.endGame(opponent);
                         }
                     } else {    //Send one more question
-                        currentCategory = game.getCurrentCategory();
-                        out.writeObject(game.getRandomQuiz(currentCategory));
-                   
+                        if(mark == 0){
+                            currentCategory = game.getCurrentCategory();
+                            game.setRandomQuiz(currentCategory);   
+                            out.writeObject(game.getQuiz(questioncounter++));
+                        } else {
+                            out.writeObject(game.getQuiz(questioncounter++));
+                        }
                     }
                 } 
             }
             
-        } catch (IOException ex) {
-            Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {

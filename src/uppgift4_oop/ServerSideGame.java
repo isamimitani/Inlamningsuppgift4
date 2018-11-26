@@ -75,13 +75,14 @@ public class ServerSideGame {
             }
         }
     }
-    
-    public Quiz getRandomQuiz(){
-        Quiz quiz = null;
-        Random rand = new Random();
-        quiz = questions.get(rand.nextInt(questions.size()));
-        return quiz;
-    }
+
+//////Unused method//////  
+//    public Quiz setRandomQuiz(){
+//        Quiz quiz = null;
+//        Random rand = new Random();
+//        quiz = questions.get(rand.nextInt(questions.size()));
+//        return quiz;
+//    }
     
     public String getRandomCategory(){
         String category = null;
@@ -89,24 +90,25 @@ public class ServerSideGame {
         category = categories.get(rand.nextInt(categories.size()));
         return category;
     }
+  
+//////Unused method//////      
+//    public <T>T getRandom(String s){ 
+//        if(s.equalsIgnoreCase("Quiz")){
+//            Quiz quiz = null;
+//            Random rand = new Random();
+//            quiz = questions.get(rand.nextInt(questions.size()));
+//            return (T)quiz;
+//        } else if(s.equalsIgnoreCase("Category")){
+//            String category = null;
+//            Random rand = new Random();
+//            category = categories.get(rand.nextInt(categories.size()));
+//            return (T)category;
+//        } else {
+//            return null;
+//        }
+//    }
     
-    public <T>T getRandom(String s){ 
-        if(s.equalsIgnoreCase("Quiz")){
-            Quiz quiz = null;
-            Random rand = new Random();
-            quiz = questions.get(rand.nextInt(questions.size()));
-            return (T)quiz;
-        } else if(s.equalsIgnoreCase("Category")){
-            String category = null;
-            Random rand = new Random();
-            category = categories.get(rand.nextInt(categories.size()));
-            return (T)category;
-        } else {
-            return null;
-        }
-    }
-    
-    public Quiz getRandomQuiz(String category){
+    public void setRandomQuiz(String category){
         Quiz quiz = null;
         ArrayList<Quiz> list = new ArrayList<>();
         for(Quiz q : questions){
@@ -116,28 +118,32 @@ public class ServerSideGame {
         }
         Random rand = new Random();
         quiz = list.get(rand.nextInt(list.size()));
-        return quiz;
+        sendList.add(quiz);
     }
     
-        public List getRandomQuizList(String category, int num){
-        Quiz quiz = null;
-        int count = 0;
-        Random rand = new Random();
-        ArrayList<Quiz> list = new ArrayList<>();
-        while(list.size()!=num){
-            quiz = questions.get(rand.nextInt(questions.size()));
-            if(quiz.getCategory().equals(category)){
-                list.add(quiz);
-            }
-        }
-        return list;
+    public Quiz getQuiz(int i){
+        return sendList.get(i);
     }
+
+//////Unused method//////      
+//    public List getRandomQuizList(String category, int num){
+//        Quiz quiz = null;
+//        int count = 0;
+//        Random rand = new Random();
+//        ArrayList<Quiz> list = new ArrayList<>();
+//        while(list.size()!=num){
+//            quiz = questions.get(rand.nextInt(questions.size()));
+//            if(quiz.getCategory().equals(category)){
+//                list.add(quiz);
+//            }
+//        }
+//        return list;
+//    }
     
    public String getCurrentCategory(){
          return currentCategory;
     }
-
-    
+   
     public List<String> getCategories(){
         return categories;
     }
@@ -150,11 +156,16 @@ public class ServerSideGame {
         currentPlayer = player;
         currentPlayer.otherPlayerAnswered();
         //** TODO: måste skicka resultat av spelaren som svarade sist
+        int[] array ={1,1,1,1};
+        currentPlayer.sendOpponentResult(array);
     }
     
     public void endGame(ServerSidePlayer player){
         currentPlayer = player;
         player.gameIsOver();
+        //** TODO: måste skicka resultat av spelaren som svarade sist
+        int[] array ={1,1,1,1};
+        currentPlayer.sendOpponentResult(array);
     }
        
     public boolean isEndOfGame(){
