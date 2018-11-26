@@ -59,7 +59,7 @@ public class Quiz implements Serializable{
 
     @Override
     public String toString(){
-        return "Question";
+        return "QUESTION";
     }
 
 }

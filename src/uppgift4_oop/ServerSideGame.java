@@ -35,9 +35,9 @@ public class ServerSideGame {
     static{
         try{
             prop.load(new FileInputStream(PATH));
-//            System.out.println("Number of Rounds: " + prop.getProperty("numberOfRounds"));
-//            System.out.println("Number of Questions: " + prop.getProperty("numberOfQuestions"));
-//            System.out.println("File path of Questions: " + prop.getProperty("quizFilePath"));
+            System.out.println("Number of Rounds: " + prop.getProperty("numberOfRounds"));
+            System.out.println("Number of Questions: " + prop.getProperty("numberOfQuestions"));
+            System.out.println("File path of Questions: " + prop.getProperty("quizFilePath"));
             
         } catch(IOException ex){
             System.out.println("IO Exception.");
@@ -75,13 +75,14 @@ public class ServerSideGame {
             }
         }
     }
-    
-    public Quiz getRandomQuiz(){
-        Quiz quiz = null;
-        Random rand = new Random();
-        quiz = questions.get(rand.nextInt(questions.size()));
-        return quiz;
-    }
+
+//////Unused method//////  
+//    public Quiz setRandomQuiz(){
+//        Quiz quiz = null;
+//        Random rand = new Random();
+//        quiz = questions.get(rand.nextInt(questions.size()));
+//        return quiz;
+//    }
     
     public String getRandomCategory(){
         String category = null;
@@ -89,24 +90,25 @@ public class ServerSideGame {
         category = categories.get(rand.nextInt(categories.size()));
         return category;
     }
+  
+//////Unused method//////      
+//    public <T>T getRandom(String s){ 
+//        if(s.equalsIgnoreCase("Quiz")){
+//            Quiz quiz = null;
+//            Random rand = new Random();
+//            quiz = questions.get(rand.nextInt(questions.size()));
+//            return (T)quiz;
+//        } else if(s.equalsIgnoreCase("Category")){
+//            String category = null;
+//            Random rand = new Random();
+//            category = categories.get(rand.nextInt(categories.size()));
+//            return (T)category;
+//        } else {
+//            return null;
+//        }
+//    }
     
-    public <T>T getRandom(String s){ 
-        if(s.equalsIgnoreCase("Quiz")){
-            Quiz quiz = null;
-            Random rand = new Random();
-            quiz = questions.get(rand.nextInt(questions.size()));
-            return (T)quiz;
-        } else if(s.equalsIgnoreCase("Category")){
-            String category = null;
-            Random rand = new Random();
-            category = categories.get(rand.nextInt(categories.size()));
-            return (T)category;
-        } else {
-            return null;
-        }
-    }
-    
-    public Quiz getRandomQuiz(String category){
+    public void setRandomQuiz(String category){
         Quiz quiz = null;
         ArrayList<Quiz> list = new ArrayList<>();
         for(Quiz q : questions){
@@ -116,28 +118,32 @@ public class ServerSideGame {
         }
         Random rand = new Random();
         quiz = list.get(rand.nextInt(list.size()));
-        return quiz;
+        sendList.add(quiz);
     }
     
-        public List getRandomQuizList(String category, int num){
-        Quiz quiz = null;
-        int count = 0;
-        Random rand = new Random();
-        ArrayList<Quiz> list = new ArrayList<>();
-        while(list.size()!=num){
-            quiz = questions.get(rand.nextInt(questions.size()));
-            if(quiz.getCategory().equals(category)){
-                list.add(quiz);
-            }
-        }
-        return list;
+    public Quiz getQuiz(int i){
+        return sendList.get(i);
     }
+
+//////Unused method//////      
+//    public List getRandomQuizList(String category, int num){
+//        Quiz quiz = null;
+//        int count = 0;
+//        Random rand = new Random();
+//        ArrayList<Quiz> list = new ArrayList<>();
+//        while(list.size()!=num){
+//            quiz = questions.get(rand.nextInt(questions.size()));
+//            if(quiz.getCategory().equals(category)){
+//                list.add(quiz);
+//            }
+//        }
+//        return list;
+//    }
     
    public String getCurrentCategory(){
          return currentCategory;
     }
-
-    
+   
     public List<String> getCategories(){
         return categories;
     }
@@ -147,14 +153,29 @@ public class ServerSideGame {
     }
     
     public void changePlayer(ServerSidePlayer player){
+        int[] array = currentPlayer.result;
+        System.out.println("sending opponent result");
+        for(int i=0; i<array.length; i++){
+            System.out.print(array[i]);
+        }
+        System.out.println();
         currentPlayer = player;
-        currentPlayer.otherPlayerAnswered();
-        //** TODO: måste skicka resultat av spelaren som svarade sist
+        currentPlayer.sendOpponentResult(array);
+        currentPlayer.otherPlayerAnswered();      
+        
     }
     
     public void endGame(ServerSidePlayer player){
+        int[] array = currentPlayer.result;
+        System.out.println("sending opponent result");
+        for(int i=0; i<array.length; i++){
+            System.out.print(array[i]);
+        }
+        System.out.println();
         currentPlayer = player;
+        currentPlayer.sendOpponentResult(array);
         player.gameIsOver();
+        
     }
        
     public boolean isEndOfGame(){
@@ -180,5 +201,15 @@ public class ServerSideGame {
             return false;
         }
     }
+
+    public int getNumOfRounds() {
+        return numOfRounds;
+    }
+
+    public int getNumOfQuestions() {
+        return numOfQuestions;
+    }
+    
+    
      
 }
