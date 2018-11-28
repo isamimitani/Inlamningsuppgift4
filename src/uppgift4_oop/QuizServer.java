@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Server klass tar emot två clienter och startar upp spelet
  * @author isami
  */
 public class QuizServer {
@@ -14,6 +14,7 @@ public class QuizServer {
     private int portNumber = 12540;
     private ServerSocket serverSocket;
     
+    // Konstruktor
     public QuizServer(){
               
         System.out.println("QUIZServer is Running");

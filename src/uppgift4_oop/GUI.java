@@ -30,7 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 /**
- *
+ * Klass för GUI
  * @author Bazgir
  */
 class GUI extends JFrame {
@@ -72,6 +72,7 @@ class GUI extends JFrame {
     JPanel startpanel = new JPanel();
     JPanel resultatMain = new JPanel();
     
+    // Konstruktor
     public GUI(QuizClient client) throws IOException
     { 
         this.client = client;
@@ -88,14 +89,14 @@ class GUI extends JFrame {
         jrf.setSize(400,600);
         jrf.setResizable(false);
         jrf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //jrf.setVisible(true);
         jrf.setVisible(false);
     }
     
+    // Skapar upp en panel för frågor
     public void createMainPanel(){
         Font omgång = new Font("Ariel",Font.BOLD, 12);
         Font fråga = new Font("Ariel",Font.ITALIC, 14);
-        //Main panel för frågespel
+
         top.setLayout(new BorderLayout());
         top.setBackground(Color.decode("#317AD5"));  
         
@@ -147,6 +148,7 @@ class GUI extends JFrame {
                 jrf.revalidate();
             }
         });
+        //Result knappens action
         toResult.addActionListener(ae->{
             jrf.setVisible(false);
             
@@ -162,7 +164,7 @@ class GUI extends JFrame {
                     setOpponentPoints(client.getTotalPoints(client.opponentResult));
                 }
             }
-            
+            // Byter panelen till resultatpanelen
             jrf.remove(main);
             jrf.add(resultatMain);
             start.setVisible(false);
@@ -171,6 +173,7 @@ class GUI extends JFrame {
         });
     }
     
+    // Skapar upp en panel för resultat
     public void createResultPanel(){
         //Resultat panel för resultat för score samt tidigare rundor etc. 
         Font players = new Font("",Font.BOLD,16);
@@ -186,19 +189,6 @@ class GUI extends JFrame {
         spelare.add(spelareA, WEST); 
         spelare.add(spelareB, EAST); 
 
-//        score.setLayout(new GridLayout(client.numberOfRounds,1,20,20));
-//        for(int z = 1; z <= client.numberOfRounds; z++){                //Ändra värdet på 4:an till det variabel som motsvarar score.
-//            JLabel scoreA = new JLabel("-", SwingConstants.CENTER); 
-//            JLabel rundaX = new JLabel(" Runda " + z, SwingConstants.CENTER); 
-//            JLabel scoreB = new JLabel("-" , SwingConstants.CENTER);  
-//            scoreA.setFont(rounds);
-//            rundaX.setFont(rounds);
-//            scoreB.setFont(rounds);
-//            score.setBackground(Color.decode("#518FDB"));
-//            score.add(scoreA); 
-//            score.add(rundaX);  
-//            score.add(scoreB); 
-//        }  
         score.setLayout(new GridLayout(1,client.numberOfRounds,20,20));
         rounds.setLayout(new GridLayout(client.numberOfRounds+1,1, 20, 20));
         myScore.setLayout(new GridLayout(client.numberOfRounds+1,1, 20, 20));
@@ -218,18 +208,6 @@ class GUI extends JFrame {
         score.add(myScore);
         score.add(rounds);
         score.add(opponentScore);
-//        JLabel scoreCurrentA = new JLabel("x", SwingConstants.CENTER);
-//        JLabel between = new JLabel(" Total result shows here ", SwingConstants.CENTER);
-//        JLabel scoreCurrentB = new JLabel("x", SwingConstants.CENTER); 
-//        scoreCurrentA.setFont(big); 
-//        scoreCurrentB.setFont(big); 
-//        resultat.setBackground(Color.decode("#518FDB"));
-//        scoreCurrentA.setVisible(true);
-//        between.setVisible(true);
-//        scoreCurrentB.setVisible(true);
-//        resultat.add(scoreCurrentA); 
-//        resultat.add(between);
-//        resultat.add(scoreCurrentB);
         
         messagepanel.add(message);
         //messagepanel.setBackground(Color.decode("#518FDB"));
@@ -246,7 +224,6 @@ class GUI extends JFrame {
         resultatMain.setLayout(new BoxLayout(resultatMain, BoxLayout.PAGE_AXIS));  
         resultatMain.add(spelare);
         resultatMain.add(score);  
-        //resultatMain.add(resultat); 
         resultatMain.add(messagepanel);
         resultatMain.add(startpanel);
         resultatMain.setSize(300, 150);
@@ -254,28 +231,33 @@ class GUI extends JFrame {
         jrf.setVisible(true);
     }
     
+    // Visar egen poäng
     public void setMyPoints(int points){
         JLabel point = new JLabel(String.valueOf(points));
         myScore.add(point);
         jrf.revalidate();
     }
     
+    // Visar opponentens poäng
     public void setOpponentPoints(int points){
         JLabel point = new JLabel(String.valueOf(points));
         opponentScore.add(point);
         jrf.revalidate();        
     }
     
+    // Visar start-knappen
     public void showStartButton(){
         start.setVisible(true);
         jrf.revalidate();
     }
     
+    // Ändrar texten till message-label
     public void setMessage(String text){
         message.setText(text);
         jrf.revalidate();
     }
     
+    // Tar emot en fråga och lägger den till frågepanelen
     public void setQuiz(Quiz quiz){
 
         title.setTitle(quiz.getCategory());
@@ -290,6 +272,7 @@ class GUI extends JFrame {
         jrf.revalidate();
     }
     
+    // Lägger till poängrutor till frågepanelen
     public void setPointBox(){
         //Anpassas efter antal frågor
         int numOfQuestions = client.numberOfQuestions;
@@ -301,11 +284,13 @@ class GUI extends JFrame {
         jrf.revalidate();
     }
     
+    // Inner klass för fyra knapparna med svarsalternative
     final class Svaren extends JPanel implements ActionListener{ 
     
         List<JButton> svaren = new ArrayList<>(4);
         JButton svar; 
 
+        // Konstruktor
         public Svaren() throws IOException
         {   
             setBackground(Color.decode("#317AD5"));
@@ -317,12 +302,11 @@ class GUI extends JFrame {
                 svar.setBackground(Color.BLACK); 
                 svar.setOpaque(true);
                 svaren.add(svar);  
-                svar.addActionListener(this); 
-
-               //game();          
+                svar.addActionListener(this);         
             }       
         } 
 
+        // Blandar knapparnas position
         public void game(){
             for(int i=0; i<svaren.size();i++){
                 this.remove(svaren.get(i));
@@ -339,6 +323,7 @@ class GUI extends JFrame {
             jrf.revalidate();    
         }
 
+        // Action för knapparna
         @Override
         public void actionPerformed(ActionEvent e) {
             for(int i=0; i<svaren.size() ; i++){
@@ -378,6 +363,7 @@ class ImagePanel extends JPanel
     {
         this.image = image; 
     }
+    
     @Override
     protected void paintComponent(Graphics g) 
     {

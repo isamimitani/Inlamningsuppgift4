@@ -3,7 +3,7 @@ package uppgift4_oop;
 import java.io.Serializable;
 
 /**
- *
+ * Quiz klass inneåller infomation om en fråga
  * @author 
  */
 public class Quiz implements Serializable{
@@ -18,6 +18,7 @@ public class Quiz implements Serializable{
     private String alt3;
     private String alt4;
 
+    // Konstruktor
     public Quiz(String category, String quizText, String answer, String alt1, 
             String alt2, String alt3, String alt4) {
         this.category = category;
@@ -29,6 +30,7 @@ public class Quiz implements Serializable{
         this.alt4 = alt4;
     }
 
+    // Getters. Setters behövs inte eftersom innehållet ska inte ändras
     public String getCategory() {
         return category;
     }

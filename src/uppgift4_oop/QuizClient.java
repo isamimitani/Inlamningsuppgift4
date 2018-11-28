@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 import javax.swing.SwingUtilities;
 
 /**
- *
+ * KLass för en client(en spelare)
  * @author
  */
 public class QuizClient {
@@ -33,7 +33,7 @@ public class QuizClient {
     public int numberOfRounds;
     public int numberOfQuestions;
     
-    
+    // Konstruktor
     public QuizClient(){
                 
         try{
@@ -48,6 +48,7 @@ public class QuizClient {
 
     }
     
+    // Tar emot en sträng och returnerar första ordet
     private String getFirstWord(String str){
         String res;
         int index = str.indexOf(" ");
@@ -59,10 +60,13 @@ public class QuizClient {
         return res;
     }
     
+    // Kollar om svaret spelaren valde är rätt
     public boolean isRightAnswer(String answer){
         return currentQuiz.getAnswer().equals(answer);
     }
     
+    // Sparar spelarens resultat. Om det är spelare1 och det är slutet av en rond
+    // visar upp total poäng för ronden på resultatpanelen
     public void saveAnswer(boolean correct){
         if(correct){
             myResult[questioncounter++] = 1;
@@ -76,16 +80,21 @@ public class QuizClient {
                     i<roundcounter*numberOfQuestions+numberOfQuestions; i++){
                 temp += myResult[i];
             }
-            gui.setMyPoints(temp);
+            final int temp2 = temp;
+            SwingUtilities.invokeLater(() -> {
+                gui.setMyPoints(temp2);
+            });        
             roundcounter++;
         }
         
     }
     
+    // Returnerar summa av en int_arrays varje element
     public int getTotalPoints(int[] array){
         return IntStream.of(array).sum();
     }
     
+    // Skickar svaret till Serversidan
     public void sendAnswer(boolean correct){
        try{
             if(correct){
@@ -98,20 +107,31 @@ public class QuizClient {
         }
     }
     
+    // Kollar om spelaren har vunnit eller inte
     private void isWinner(){
-        int mySum = IntStream.of(myResult).sum();
-        int opponentSum = IntStream.of(opponentResult).sum();
+        int mySum = getTotalPoints(myResult);
+        int opponentSum = getTotalPoints(opponentResult);
         System.out.println("my result " + mySum);
         System.out.println("opponent result " + opponentSum);
         if(mySum > opponentSum){
             System.out.println("You won!");
+            SwingUtilities.invokeLater(() -> {
+                gui.setMessage("You won!");
+            });
         } else if(mySum < opponentSum){
             System.out.println("You lost!");
+            SwingUtilities.invokeLater(() -> {
+                gui.setMessage("You lost!");
+            });
         } else {
             System.out.println("Draw!");
+            SwingUtilities.invokeLater(() -> {
+                gui.setMessage("Draw!");
+            });
         }
     }
     
+    // Startar loopen för att lyssna på servern
     public void play(){
         
         Object fromServer;
@@ -121,11 +141,8 @@ public class QuizClient {
                 System.out.println(fromServer);              
                 switch(getFirstWord(fromServer.toString())){
                     case "WELCOME":
-                        //lagra antal ronder och antal frågor  i variabler
                         numberOfRounds = Character.getNumericValue(fromServer.toString().charAt(8));
                         numberOfQuestions = Character.getNumericValue(fromServer.toString().charAt(10));
-                        
-                        //initiera int[] med antal ronder och antal frågar
                         myResult = new int[numberOfRounds*numberOfQuestions];
                         
                         // Must do this, otherwise the program does not work 
@@ -133,8 +150,6 @@ public class QuizClient {
                             gui.setPointBox();
                             gui.createResultPanel();
                         });
-                        
-                        //anpassa GUI efter antal ronder och antal frågor
                         break;
                     case "QUESTION":
                         currentQuiz = (Quiz)fromServer;
@@ -175,20 +190,16 @@ public class QuizClient {
                                 gui.setOpponentPoints(getTotalPoints(opponentResult));
                             }
                         });
-                        for(int i: myResult)
-                            System.out.print(i);
-                        System.out.println();
-                        //gemför resultatet och visa vem som vann eller förlorade
                         isWinner();     
                         break;
                     case "RESULT":
-                        //tar emot int[] array som är opponentens resultat och lagra den som opponentens resultat
                         fromServer = in.readObject(); 
                         opponentResult =(int[])fromServer;
                         System.out.println("Got opponent result");
                         for(int i=0; i<opponentResult.length; i++){
                             System.out.print(opponentResult[i]);
                         }
+                        System.out.println();
                         if(mark == 0){
                             int temp = 0;
                             System.out.println("RESULT roundcounter " + roundcounter);
@@ -196,7 +207,10 @@ public class QuizClient {
                                     i<(roundcounter-1)*numberOfQuestions+2; i++){
                                 temp += opponentResult[i];
                             }
-                            gui.setOpponentPoints(temp);
+                            final int temp2 = temp;
+                            SwingUtilities.invokeLater(() -> {
+                                gui.setOpponentPoints(temp2);
+                            });
                             System.out.println();
                         }
                         break; 

@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Klass för en spelar på serversidan
  * @author 
  */
 public class ServerSidePlayer extends Thread{
@@ -23,6 +23,7 @@ public class ServerSidePlayer extends Thread{
     int questioncounter = 0;
     int[] result;
     
+    // Konstruktor
     public ServerSidePlayer(Socket socket, ServerSideGame game, int mark){
         this.socket = socket;
         this.game = game;
@@ -46,11 +47,12 @@ public class ServerSidePlayer extends Thread{
         
     }
     
-    
+    // Setter för opponent
     public void setOpponent(ServerSidePlayer opponent) {
         this.opponent = opponent;
     }
     
+    // Meddelar clienten att det är hens tur och skickar en fråga
     public void otherPlayerAnswered(){
         try {
             currentCategory = game.getCurrentCategory();
@@ -66,6 +68,7 @@ public class ServerSidePlayer extends Thread{
         }
     }
     
+    // Skickar opponentens resultat till clienten
     public void sendOpponentResult(int[] res){
         try {
             out.writeObject("RESULT");
@@ -73,7 +76,7 @@ public class ServerSidePlayer extends Thread{
             for(int i=0; i<res.length; i++){
                 System.out.print(res[i]);
             }
-            //out.flush();
+            // Måste göra reset annars skickar man gammal array hela tiden
             out.reset();
             out.writeObject(res);
         } catch (IOException ex) {
@@ -81,6 +84,7 @@ public class ServerSidePlayer extends Thread{
         }
     }
     
+    // Meddelar clienten att spelet är slut
     public void gameIsOver(){
         try {
             out.writeObject("END_OF_GAME");
@@ -121,7 +125,6 @@ public class ServerSidePlayer extends Thread{
                             out.writeObject("END_OF_ROUND");
                             game.changePlayer(opponent);
                         } else {    //iIf the game is over
-                            //must send the result
                             gameIsOver();
                             game.endGame(opponent);
                         }
