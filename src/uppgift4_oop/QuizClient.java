@@ -147,11 +147,7 @@ public class QuizClient {
                         
                         // Must do this, otherwise the program does not work 
                         SwingUtilities.invokeLater(() -> {
-                    try {
-                        gui.setPointBox();
-                    } catch (IOException ex) {
-                        Logger.getLogger(QuizClient.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                            gui.setPointBox();
                             gui.createResultPanel();
                         });
                         break;
