@@ -59,8 +59,11 @@ class GUI extends JFrame {
     boolean currentAnswer = false;
     
     final String pointsNull = "src//images//pointsNull.png"; 
-    final String pointsTrue = "src//images//pointsTrue.png"; 
-    final String pointsFalse = "src//images//pointsFalse.png";  
+    JLabel poNull = new JLabel(new ImageIcon(pointsNull)); 
+    final String pointsTrue = "src//images//pointsTrue.png";  
+    JLabel poTrue = new JLabel(new ImageIcon(pointsTrue)); 
+    final String pointsFalse = "src//images//pointsFalse.png";   
+    JLabel poFalse = new JLabel(new ImageIcon(pointsFalse)); 
     
     JPanel spelare = new JPanel();
     JPanel score = new JPanel();
@@ -272,14 +275,13 @@ class GUI extends JFrame {
         jrf.revalidate();
     }
     
-    // Lägger till poängrutor till frågepanelen
-    public void setPointBox(){
-        //Anpassas efter antal frågor
+    public void setPointBox() throws IOException{
+        //Anpassas efter antal frågor 
         int numOfQuestions = client.numberOfQuestions;
-        System.out.println("GUI number of questions" + numOfQuestions);
+        System.out.println("GUI number of questions" + numOfQuestions); 
         for (int x = 0; x < numOfQuestions; x++){ 
-            JLabel po = new JLabel(new ImageIcon(pointsNull));  
-            points.add(po);
+            poNull = new JLabel(new ImageIcon(pointsNull)); 
+            points.add(poNull); 
         }
         jrf.revalidate();
     }
@@ -325,24 +327,58 @@ class GUI extends JFrame {
 
         // Action för knapparna
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) { 
+            int answeredQuestion= 0;
+            int correct = 0; 
+            int incorrect = 0;
             for(int i=0; i<svaren.size() ; i++){
                 if(e.getSource() == svaren.get(i)){
                     if(client.isRightAnswer(svaren.get(i).getText())){
-                        svaren.get(i).setBackground(Color.GREEN);
-                        currentAnswer = true;
+                        svaren.get(i).setBackground(Color.GREEN); 
+                        while(answeredQuestion == 0){
+                                points.removeAll(); 
+                                points.add(poTrue);
+                                points.add(poNull); 
+                                answeredQuestion = 1;
+                                correct++; 
+                        }     
+                        currentAnswer = true; 
+                        if (correct > 1 || correct < client.numberOfQuestions){
+                            points.remove(poNull); 
+                            points.add(poTrue); 
+                            //correct = 0;
+                        }    
+                        
                         //**TODO** poäng box måste ändras
                     } else {
-                        svaren.get(i).setBackground(Color.RED);
+                        svaren.get(i).setBackground(Color.RED);  
+                        while (answeredQuestion == 0){
+                            points.removeAll();
+                            points.add(poFalse);
+                            points.add(poNull); 
+                            answeredQuestion = 1;
+                            incorrect++;  
+                        }
+                            
+                            if (incorrect > 1 || incorrect < client.numberOfQuestions){ 
+                                points.remove(poNull); 
+                                points.add(poFalse); 
+                            //incorrect = 0;
+                            }
+                            
                         for(int j=0; j< svaren.size(); j++){
                             if(client.isRightAnswer(svaren.get(j).getText())){
                                 svaren.get(j).setBackground(Color.GREEN);
                             }
                         }
-                        currentAnswer = false;
+                        currentAnswer = false; 
+                               
                         //**TODO** poäng box måste ändras
-                    }
-                }
+                    }  
+                                                                   
+                }  
+                
+                
             }
             next.setVisible(true);
             for(int i=0; i<svaren.size(); i++){
