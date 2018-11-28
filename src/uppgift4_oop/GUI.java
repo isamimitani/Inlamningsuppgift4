@@ -332,7 +332,7 @@ class GUI extends JFrame {
             Collections.shuffle(svaren);
             svaren.forEach(svar -> {
                 svar.setEnabled(true);
-                svar.setForeground(Color.WHITE); 
+                svar.setForeground(Color.GREEN); 
                 svar.setBackground(Color.BLACK);
                 this.add(svar);
             });
