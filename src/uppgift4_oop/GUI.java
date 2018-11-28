@@ -47,6 +47,9 @@ class GUI extends JFrame {
     JPanel main = new JPanel();
    
     JButton next = new JButton("next");
+    JButton toResult = new JButton("result");
+    JButton start = new JButton("start");
+    JLabel message = new JLabel("");
     
     TitledBorder title; 
     Svaren spel = new Svaren(); 
@@ -62,14 +65,36 @@ class GUI extends JFrame {
     final String pointsFalse = "src//images//pointsFalse.png";  
     
     JPanel spelare = new JPanel();
-    JPanel runda = new JPanel(); 
+    JPanel score = new JPanel();
+    JPanel myScore = new JPanel();
+    JPanel opponentScore = new JPanel();
+    JPanel rounds = new JPanel();
     JPanel resultat = new JPanel();
+    JPanel messagepanel = new JPanel();
+    JPanel startpanel = new JPanel();
     JPanel resultatMain = new JPanel();
     
     public GUI(QuizClient client) throws IOException
     { 
         this.client = client;
         
+        createMainPanel();
+
+        BufferedImage background = ImageIO.read(new File("src//images//background.jpg")); 
+        jrf.setContentPane(new ImagePanel(background));
+        
+        //jrf.add(main);  
+        //jrf.add(resultatMain);
+        jrf.pack(); 
+        jrf.setLocation(100, 100); 
+        jrf.setSize(400,600);
+        jrf.setResizable(false);
+        jrf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //jrf.setVisible(true);
+        jrf.setVisible(false);
+    }
+    
+    public void createMainPanel(){
         Font omgång = new Font("Ariel",Font.BOLD, 12);
         Font fråga = new Font("Ariel",Font.ITALIC, 14);
         //Main panel för frågespel
@@ -108,8 +133,10 @@ class GUI extends JFrame {
         // next button and its action
         nextpanel.setBackground(Color.decode("#317AD5"));
         nextpanel.add(next);
+        nextpanel.add(toResult);
         main.add(nextpanel);
         next.setVisible(false);
+        toResult.setVisible(false);
         next.addActionListener(ae -> {
             client.currentQuiz = null;
             client.saveAnswer(currentAnswer);
@@ -118,65 +145,137 @@ class GUI extends JFrame {
                 spel.game();
             } else {
                 next.setVisible(false);
-                revalidate();
+                toResult.setVisible(true);
+                jrf.revalidate();
             }
         });
-        
-        //Resultat panel för resultat för runda samt tidigare rundor etc. 
-            Font players = new Font("",Font.BOLD,16);
-            Font rounds = new Font("",Font.BOLD,15);
-            Font big = new Font("",Font.BOLD, 30);
-           
-            spelare.setLayout(new BorderLayout()); 
-            spelare.setBackground(Color.decode("#518FDB"));
-            JLabel spelareA = new JLabel(" Spelare A");  
-            JLabel spelareB = new JLabel("Spelare B ");  
-                spelareA.setFont(players);
-                spelareB.setFont(players);
-            spelare.add(spelareA, WEST); 
-            spelare.add(spelareB, EAST); 
+        toResult.addActionListener(ae->{
+            jrf.setVisible(false);
             
-            runda.setLayout(new GridLayout(4,1,20,20));
-            for(int z = 1; z <= 4; z++){                //Ändra värdet på 4:an till det variabel som motsvarar runda.
-                JLabel scoreA = new JLabel("x", SwingConstants.CENTER); 
-                JLabel rundaX = new JLabel(" Runda " + z, SwingConstants.CENTER); 
-                JLabel scoreB = new JLabel("x" , SwingConstants.CENTER);  
-                    scoreA.setFont(rounds);
-                    rundaX.setFont(rounds);
-                    scoreB.setFont(rounds);
-                runda.setBackground(Color.decode("#518FDB"));
-                runda.add(scoreA); 
-                runda.add(rundaX);  
-                runda.add(scoreB); 
-            }  
-            JLabel scoreCurrentA = new JLabel("x" + " - ", SwingConstants.CENTER);
-            JLabel scoreCurrentB = new JLabel("x", SwingConstants.CENTER); 
-                scoreCurrentA.setFont(big); 
-                scoreCurrentB.setFont(big); 
-            resultat.setBackground(Color.decode("#518FDB"));
-            resultat.add(scoreCurrentA); 
-            resultat.add(scoreCurrentB);
+            if(client.mark == 1){
+                int temp = 0;
+                System.out.println("toResult roundcounter " +client.roundcounter);
+                for(int i=(client.roundcounter-1)*client.numberOfQuestions; 
+                    i<(client.roundcounter-1)*client.numberOfQuestions+client.numberOfQuestions; i++){
+                    temp += client.opponentResult[i];
+                }
+                setOpponentPoints(temp);
+                if(client.roundcounter == client.numberOfRounds){
+                    setOpponentPoints(client.getTotalPoints(client.opponentResult));
+                }
+            }
+            
+            jrf.remove(main);
+            jrf.add(resultatMain);
+            start.setVisible(false);
+            jrf.setVisible(true);
+            jrf.revalidate();
+        });
+    }
+    
+    public void createResultPanel(){
+        //Resultat panel för resultat för score samt tidigare rundor etc. 
+        Font players = new Font("",Font.BOLD,16);
+        Font round = new Font("",Font.BOLD,15);
+        Font big = new Font("",Font.BOLD, 30);
 
-            
-            resultatMain.setLayout(new BoxLayout(resultatMain, BoxLayout.PAGE_AXIS)); 
-           // resultatMain.setLayout(new GridLayout(2, 3, 10, 10)); // ROWS,COLS,Hgap,Vgap
-            resultatMain.add(spelare);
-            resultatMain.add(runda);  
-            resultatMain.add(resultat); 
-            
-            
+        spelare.setLayout(new BorderLayout()); 
+        spelare.setBackground(Color.decode("#518FDB"));
+        JLabel spelareA = new JLabel("YOU");  
+        JLabel spelareB = new JLabel("OPPONENT");  
+        spelareA.setFont(players);
+        spelareB.setFont(players);
+        spelare.add(spelareA, WEST); 
+        spelare.add(spelareB, EAST); 
+
+//        score.setLayout(new GridLayout(client.numberOfRounds,1,20,20));
+//        for(int z = 1; z <= client.numberOfRounds; z++){                //Ändra värdet på 4:an till det variabel som motsvarar score.
+//            JLabel scoreA = new JLabel("-", SwingConstants.CENTER); 
+//            JLabel rundaX = new JLabel(" Runda " + z, SwingConstants.CENTER); 
+//            JLabel scoreB = new JLabel("-" , SwingConstants.CENTER);  
+//            scoreA.setFont(rounds);
+//            rundaX.setFont(rounds);
+//            scoreB.setFont(rounds);
+//            score.setBackground(Color.decode("#518FDB"));
+//            score.add(scoreA); 
+//            score.add(rundaX);  
+//            score.add(scoreB); 
+//        }  
+        score.setLayout(new GridLayout(1,client.numberOfRounds,20,20));
+        rounds.setLayout(new GridLayout(client.numberOfRounds+1,1, 20, 20));
+        myScore.setLayout(new GridLayout(client.numberOfRounds+1,1, 20, 20));
+        opponentScore.setLayout(new GridLayout(client.numberOfRounds+1,1, 20, 20));
+        for(int z = 1; z <= client.numberOfRounds; z++){                //Ändra värdet på 4:an till det variabel som motsvarar score.
+            JLabel rundaX = new JLabel("Runda " + z, SwingConstants.CENTER); 
+            rundaX.setFont(round);
+            rounds.add(rundaX);
+        }
+        JLabel total = new JLabel("Total", SwingConstants.CENTER); 
+        total.setFont(round);
+        rounds.add(total);
+        myScore.setBackground(Color.decode("#518FDB"));
+        rounds.setBackground(Color.decode("#518FDB"));
+        opponentScore.setBackground(Color.decode("#518FDB"));
+        score.setBackground(Color.decode("#518FDB"));
+        score.add(myScore);
+        score.add(rounds);
+        score.add(opponentScore);
+//        JLabel scoreCurrentA = new JLabel("x", SwingConstants.CENTER);
+//        JLabel between = new JLabel(" Total result shows here ", SwingConstants.CENTER);
+//        JLabel scoreCurrentB = new JLabel("x", SwingConstants.CENTER); 
+//        scoreCurrentA.setFont(big); 
+//        scoreCurrentB.setFont(big); 
+//        resultat.setBackground(Color.decode("#518FDB"));
+//        scoreCurrentA.setVisible(true);
+//        between.setVisible(true);
+//        scoreCurrentB.setVisible(true);
+//        resultat.add(scoreCurrentA); 
+//        resultat.add(between);
+//        resultat.add(scoreCurrentB);
         
-        BufferedImage background = ImageIO.read(new File("src//images//background.jpg")); 
-        jrf.setContentPane(new ImagePanel(background));
-        
-        jrf.add(main);  
-        //jrf.add(resultatMain);
-        jrf.pack(); 
-        jrf.setLocation(100, 100); 
-        jrf.setSize(400,600);
-        jrf.setResizable(false);
-        jrf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        messagepanel.add(message);
+        //messagepanel.setBackground(Color.decode("#518FDB"));
+
+        startpanel.setBackground(Color.decode("#518FDB"));
+        startpanel.add(start);
+        start.setVisible(false);
+        start.addActionListener(ae -> {
+            jrf.remove(resultatMain);
+            jrf.add(main);
+            jrf.revalidate();
+        });
+
+        resultatMain.setLayout(new BoxLayout(resultatMain, BoxLayout.PAGE_AXIS));  
+        resultatMain.add(spelare);
+        resultatMain.add(score);  
+        //resultatMain.add(resultat); 
+        resultatMain.add(messagepanel);
+        resultatMain.add(startpanel);
+        resultatMain.setSize(300, 150);
+        jrf.add(resultatMain);
         jrf.setVisible(true);
+    }
+    
+    public void setMyPoints(int points){
+        JLabel point = new JLabel(String.valueOf(points));
+        myScore.add(point);
+        jrf.revalidate();
+    }
+    
+    public void setOpponentPoints(int points){
+        JLabel point = new JLabel(String.valueOf(points));
+        opponentScore.add(point);
+        jrf.revalidate();        
+    }
+    
+    public void showStartButton(){
+        start.setVisible(true);
+        jrf.revalidate();
+    }
+    
+    public void setMessage(String text){
+        message.setText(text);
+        jrf.revalidate();
     }
     
     public void setQuiz(Quiz quiz){
@@ -190,6 +289,7 @@ class GUI extends JFrame {
         }
 
         spel.game();
+        jrf.revalidate();
     }
     
     public void setPointBox(){
@@ -200,7 +300,7 @@ class GUI extends JFrame {
             JLabel po = new JLabel(new ImageIcon(pointsNull));  
             points.add(po);
         }
-        revalidate();
+        jrf.revalidate();
     }
     
     final class Svaren extends JPanel implements ActionListener{ 
@@ -237,6 +337,7 @@ class GUI extends JFrame {
                 this.add(svar);
             });
             next.setVisible(false);
+            toResult.setVisible(false);
             jrf.revalidate();    
         }
 

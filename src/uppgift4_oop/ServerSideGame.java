@@ -153,19 +153,29 @@ public class ServerSideGame {
     }
     
     public void changePlayer(ServerSidePlayer player){
+        int[] array = currentPlayer.result;
+        System.out.println("sending opponent result");
+        for(int i=0; i<array.length; i++){
+            System.out.print(array[i]);
+        }
+        System.out.println();
         currentPlayer = player;
         currentPlayer.otherPlayerAnswered();
-        //** TODO: måste skicka resultat av spelaren som svarade sist
-        int[] array ={1,1,1,1};
         currentPlayer.sendOpponentResult(array);
+        
     }
     
     public void endGame(ServerSidePlayer player){
+        int[] array = currentPlayer.result;
+        System.out.println("sending opponent result");
+        for(int i=0; i<array.length; i++){
+            System.out.print(array[i]);
+        }
+        System.out.println();
         currentPlayer = player;
-        player.gameIsOver();
-        //** TODO: måste skicka resultat av spelaren som svarade sist
-        int[] array ={1,1,1,1};
         currentPlayer.sendOpponentResult(array);
+        player.gameIsOver();
+        
     }
        
     public boolean isEndOfGame(){
@@ -191,5 +201,15 @@ public class ServerSideGame {
             return false;
         }
     }
+
+    public int getNumOfRounds() {
+        return numOfRounds;
+    }
+
+    public int getNumOfQuestions() {
+        return numOfQuestions;
+    }
+    
+    
      
 }

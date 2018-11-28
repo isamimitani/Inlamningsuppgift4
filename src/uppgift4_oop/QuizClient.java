@@ -25,11 +25,14 @@ public class QuizClient {
     public Quiz currentQuiz;
     
     private int[] myResult;
-    private int[] opponentResult;
-    private int questioncounter = 0;
+    public int[] opponentResult;
+    public int questioncounter = 0;
+    public int roundcounter = 0;
+    public int mark;
     
     public int numberOfRounds;
     public int numberOfQuestions;
+    
     
     public QuizClient(){
                 
@@ -66,6 +69,21 @@ public class QuizClient {
         } else {
             myResult[questioncounter++] = 0;
         }
+        
+        if(questioncounter % numberOfQuestions == 0){
+            int temp = 0;
+            for(int i=roundcounter*numberOfQuestions; 
+                    i<roundcounter*numberOfQuestions+numberOfQuestions; i++){
+                temp += myResult[i];
+            }
+            gui.setMyPoints(temp);
+            roundcounter++;
+        }
+        
+    }
+    
+    public int getTotalPoints(int[] array){
+        return IntStream.of(array).sum();
     }
     
     public void sendAnswer(boolean correct){
@@ -106,14 +124,14 @@ public class QuizClient {
                         //lagra antal ronder och antal frågor  i variabler
                         numberOfRounds = Character.getNumericValue(fromServer.toString().charAt(8));
                         numberOfQuestions = Character.getNumericValue(fromServer.toString().charAt(10));
-                        System.out.println(numberOfRounds +" " + numberOfQuestions);
+                        
                         //initiera int[] med antal ronder och antal frågar
                         myResult = new int[numberOfRounds*numberOfQuestions];
-                        //opponentResult = new int[numberOfRounds*numberOfQuestions];
                         
                         // Must do this, otherwise the program does not work 
                         SwingUtilities.invokeLater(() -> {
                             gui.setPointBox();
+                            gui.createResultPanel();
                         });
                         
                         //anpassa GUI efter antal ronder och antal frågor
@@ -121,38 +139,66 @@ public class QuizClient {
                     case "QUESTION":
                         currentQuiz = (Quiz)fromServer;
                         
-                        // Must do this, otherwise the program does not work 
                         SwingUtilities.invokeLater(() -> {
                             gui.setQuiz(currentQuiz);
-                            gui.revalidate();
                         });
                                           
                         System.out.println(currentQuiz.getCategory() + ":" + currentQuiz.getQuizText());
                         break;
                     case "MESSAGE":
-                        // visa meddelande i en label i väntläge?
                         System.out.println("Got a message.");
+                        final String message = fromServer.toString();
+                        SwingUtilities.invokeLater(() -> {
+                            gui.setMessage(message);
+                        });
                         break;
                     case "END_OF_ROUND":
-                        //**TODO**byta panel till väntläge visa att man måste vänta tills opponenten svarar
                         System.out.println("End of round. Must wait!");
+                        SwingUtilities.invokeLater(() -> {
+                            gui.setMessage("Opponent's turn. You must wait..");
+                        });
                         break;
                     case "YOUR_TURN":
-                        //**TODO**: visa "start" knapp på väntläge genom att synliggöra knappen på panelen
+                        mark = Character.getNumericValue(fromServer.toString().charAt(10));
                         System.out.println("My turn! " + fromServer.toString());
+                        SwingUtilities.invokeLater(() -> {
+                            gui.setMessage("Your turn.");
+                            gui.showStartButton();
+                        });
                         break;
                     case "END_OF_GAME":                        
                         System.out.println("END!!!!");
+                        SwingUtilities.invokeLater(() -> {
+                            gui.setMessage("Game is over!");
+                            gui.setMyPoints(getTotalPoints(myResult));
+                            if(mark==0){
+                                gui.setOpponentPoints(getTotalPoints(opponentResult));
+                            }
+                        });
                         for(int i: myResult)
                             System.out.print(i);
                         System.out.println();
                         //gemför resultatet och visa vem som vann eller förlorade
-                        isWinner();                       
+                        isWinner();     
                         break;
                     case "RESULT":
                         //tar emot int[] array som är opponentens resultat och lagra den som opponentens resultat
-                        fromServer = in.readObject();            
+                        fromServer = in.readObject(); 
                         opponentResult =(int[])fromServer;
+                        System.out.println("Got opponent result");
+                        for(int i=0; i<opponentResult.length; i++){
+                            System.out.print(opponentResult[i]);
+                        }
+                        if(mark == 0){
+                            int temp = 0;
+                            System.out.println("RESULT roundcounter " + roundcounter);
+                            for(int i=(roundcounter-1)*numberOfQuestions; 
+                                    i<(roundcounter-1)*numberOfQuestions+2; i++){
+                                temp += opponentResult[i];
+                            }
+                            gui.setOpponentPoints(temp);
+                            System.out.println();
+                        }
                         break; 
                     default:
                         System.out.println(fromServer);

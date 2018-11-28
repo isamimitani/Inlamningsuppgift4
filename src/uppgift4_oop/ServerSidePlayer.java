@@ -21,11 +21,14 @@ public class ServerSidePlayer extends Thread{
     int mark; // håller koll på 0 = player1; 1=player2
     String currentCategory;
     int questioncounter = 0;
+    int[] result;
     
     public ServerSidePlayer(Socket socket, ServerSideGame game, int mark){
         this.socket = socket;
         this.game = game;
         this.mark = mark;
+        
+        result = new int[game.getNumOfRounds() * game.getNumOfQuestions()];
         
         System.out.println("New Connection:");
         System.out.println("IP-Address=" + socket.getInetAddress().getHostAddress() + 
@@ -34,8 +37,7 @@ public class ServerSidePlayer extends Thread{
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            //**TODO** must send number of rounds and questions. get info from game
-            out.writeObject("WELCOME 2 2");
+            out.writeObject("WELCOME " + game.getNumOfRounds() + " " + game.getNumOfQuestions());
             out.writeObject("MESSAGE Waiting for opponent to connect");
             
         } catch (IOException ex) {
@@ -64,10 +66,16 @@ public class ServerSidePlayer extends Thread{
         }
     }
     
-    public void sendOpponentResult(int[] result){
+    public void sendOpponentResult(int[] res){
         try {
             out.writeObject("RESULT");
-            out.writeObject(result);
+            System.out.println("method:sendOpponentResult");
+            for(int i=0; i<res.length; i++){
+                System.out.print(res[i]);
+            }
+            //out.flush();
+            out.reset();
+            out.writeObject(res);
         } catch (IOException ex) {
             Logger.getLogger(ServerSidePlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,10 +107,12 @@ public class ServerSidePlayer extends Thread{
             while(true){
                 Object fromClient = in.readObject();
                 if(fromClient.toString().startsWith("ANSWERED")){
-                    //**TODO** måste spara resultatet
                     System.out.println("GOT_ANSWER: " + fromClient.toString());
+                    int point = Character.getNumericValue(fromClient.toString().charAt(9));
+                    result[questioncounter-1] = point;
                     game.questionCounter++;
                     System.out.println("questioncounter: " + game.questionCounter);
+                    
                     //If it is end of round
                     if(game.isEndOfRound()){
                         System.out.println("roundcounter: " + game.roundCounter);
